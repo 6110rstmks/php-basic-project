@@ -3,6 +3,9 @@
 session_start();
 require_once("./config.php");
 
+$session_msgs = $_SESSION;
+$_SESSION = array();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +26,15 @@ require_once("./config.php");
             <input type="text" name="first_name" id="">
         </p>
 
-        <?= $_SESSION['last_name_required'] ?>
+        <!-- <?php if(isset($session_msgs['last_name_zenkaku'])): ?>
+            <?= $session_msgs['last_name_zenkaku'] ?>
+        <?php endif;?> -->
+
+        <?php foreach($session_msgs as $msg): ?>
+            <p style="color: red;"><?= $msg ?></p>
+        <?php endforeach; ?>
+
+        
 
         <p>
             <span>性別</span>
@@ -37,6 +48,7 @@ require_once("./config.php");
             <span>住所</span>
             <label for="">都道府県</label>
                 <select id="prefectures" name="prefectures">
+                    <option value="">選択してください</option>
                     <option value="北海道">北海道</option>
                     <option value="青森県">青森県</option>
                     <option value="岩手県">岩手県</option>
@@ -86,7 +98,7 @@ require_once("./config.php");
                     <option value="沖縄県">沖縄県</option>
                 </select>
             <label for="">それ以降の住所</label>
-            <input type="text" name="" id="">
+            <input type="text" name="other_address" id="">
         </p>
 
         <p>
