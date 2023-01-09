@@ -5,7 +5,7 @@ require_once("./config.php");
 
 $session_msgs = $_SESSION;
 $_SESSION = array();
-
+$b = 'oiu';
 ?>
 <!DOCTYPE html>
 <html lang="en">
