@@ -1,11 +1,15 @@
 <?php
 
 session_start();
+
 require_once("./config.php");
+require_once("../App/Token.php");
+
+use App\Token;
 
 $session_msgs = $_SESSION;
 $_SESSION = array();
-$b = 'oiu';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,15 +30,11 @@ $b = 'oiu';
             <input type="text" name="first_name" id="">
         </p>
 
-        <!-- <?php if(isset($session_msgs['last_name_zenkaku'])): ?>
-            <?= $session_msgs['last_name_zenkaku'] ?>
-        <?php endif;?> -->
-
-        <?php foreach($session_msgs as $msg): ?>
-            <p style="color: red;"><?= $msg ?></p>
-        <?php endforeach; ?>
-
-        
+        <?php if(!array_key_exists('csrf_token', $session_msgs)): ?>
+            <?php foreach($session_msgs as $msg): ?>
+                <p style="color: red;"><?= $msg ?></p>
+            <?php endforeach; ?>
+        <?php endif; ?>
 
         <p>
             <span>性別</span>
@@ -47,7 +47,7 @@ $b = 'oiu';
         <p>
             <span>住所</span>
             <label for="">都道府県</label>
-                <select id="prefectures" name="prefectures">
+                <select id="prefectures" name="prefecture">
                     <option value="">選択してください</option>
                     <option value="北海道">北海道</option>
                     <option value="青森県">青森県</option>
@@ -114,6 +114,10 @@ $b = 'oiu';
         <p>
             <span>メールアドレス</span>
             <input type="email" name="email">
+        </p>
+
+        <p>
+            <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
         </p>
 
         <button>確認画面</button>

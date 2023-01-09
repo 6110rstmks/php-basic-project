@@ -2,50 +2,71 @@
 
 namespace App;
 
+
 class UserLogic {
 
     private $pdo;
 
-    function __constructor($pdo)
+    function __construct($pdo)
     {
         $this->pdo = $pdo;
     }
 
-    public static function createUser(array $userData): bool
+    /**
+     * 
+     * @param string $email
+     * @return bool
+     */
+    public function checkSameEmailExist($email)
     {
-        $result = false;
-        $sql = 'INSERT INTO users (lastname, first_name, sex, prefecture, other_address, password, password_cnf, email) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'SELECT * FROM members WHERE email = :email';
+        
 
-        // put userData into array
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':email', $email);
+
+        $return = $stmt->execute();
+
+        return $return;
+    }
+
+    public function createUser(array $userData)
+    {
+        // $result = false; 
+        $sql = 'INSERT INTO members (name_sei, name_mei, gender, pref_name, address, password, email) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
         $arr = [];
 
-        $arr[] = $userData['name'];
-
+        $arr[] = $userData['last_name'];
+        $arr[] = $userData['first_name'];
+        $arr[] = $userData['sex'];
+        $arr[] = $userData['prefecture'];
+        $arr[] = $userData['other_address'];
+        $arr[] = $userData['password'];
         $arr[] = $userData['email'];
 
-        $arr[] = password_hash($userData['password'], PASSWORD_DEFAULT);
+        // $arr[] = password_hash($userData['password'], PASSWORD_DEFAULT);
 
-        try {
-            $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute($arr);
-        } catch(\Exception $e) {
-            return $result;
-        }
+        $stmt = $this->pdo->prepare($sql);
 
-        session_regenerate_id(true);
+        $stmt->execute($arr);
 
-        $stmt = connect()->prepare("SELECT id FROM users WHERE name = :name");
 
-        $stmt->bindValue('name', $userData['name'], \PDO::PARAM_INT);
 
-        $stmt->execute();
 
-        $id = $stmt->fetch(PDO::FETCH_COLUMN);
+        // session_regenerate_id(true);
 
-        $_SESSION['login_user'] = ['id' => $id, 'name' => $userData['name']];
+        // $stmt = connect()->prepare("SELECT id FROM users WHERE name = :name");
 
-        return $result;
+        // $stmt->bindValue('name', $userData['name'], \PDO::PARAM_INT);
+
+        // $stmt->execute();
+
+        // $id = $stmt->fetch(PDO::FETCH_COLUMN);
+
+        // $_SESSION['login_user'] = ['id' => $id, 'name' => $userData['name']];
+
+        // return $result;
 
     }
 }

@@ -2,7 +2,26 @@
 
 session_start();
 require_once("./config.php");
-require_once("../dbConnect.php");
+require_once("../App/Database.php");
+require_once("../App/UserLogic.php");
+require_once("../App/Token.php");
+
+
+use App\UserLogic;
+use App\Database;
+use App\Token;
+
+// csrf_token照合
+// & 二重登録防止
+Token::validate();
+
+$_SESSION['csrf_token'] = '';
+
+
+$pdo = Database::getInstance();
+$userlogic = new UserLogic($pdo); 
+
+
 
 $prefectures_array = array('北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県', '三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県', '鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県');
 
@@ -81,7 +100,7 @@ if (!isset($sex))
 
 // 男性・女性以外の値をvalue値に入れて「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if ($sex != "男性" || $sex != "女性")
+if (!($sex == "男性" || $sex == "女性"))
 {
     $err['sex_validation'] = "性別は男性もしくは女性を選択してください";
 }
@@ -170,8 +189,23 @@ if ($password != $password_cnf)
 // ２０１文字以上入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 if (strlen($email) >= 201)
 {
-    $err['email_string_limit']= '200文字以内に収めてください';
+    
+    $err['email_string_limit'] = '200文字以内に収めてください';
 }
+
+/**
+ * メールアドレス登録時、既にDBに登録済みのアドレスの場合、エラーが表示されるか
+ * あればtrueなければfalse
+ * @var bool
+ */
+$hasEmail = $userlogic->checkSameEmailExist($email);
+
+if ($hasEmail)
+{
+    $err['email_duplicate'] = '入力されたemailは既に使用されています';
+}
+
+
 
 
 // --------------------------------
@@ -182,7 +216,7 @@ if (count($err) > 0)
     $_SESSION = $err;
     header('Location: member_regist.php');
 } else {
-
+    $userlogic->createUser($_POST);
 }
 
 ?>
@@ -215,6 +249,6 @@ if (count($err) > 0)
     <div><?= $email ?></div>
 
     <button><a href="./<?= kanryougamen ?>">完了画面</a></button>
-    <button><a href="./remember_regist.php">戻る</a></button>
+    <button type="button" onclick="history.back()">戻る</button>
 </body>
 </html>

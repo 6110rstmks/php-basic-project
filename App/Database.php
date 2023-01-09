@@ -1,6 +1,6 @@
 <?php
 namespace App;
-require_once('../config.php');
+require_once('../php/config.php');
 
 class Database
 {
@@ -21,7 +21,6 @@ class Database
           \PDO::ATTR_EMULATE_PREPARES => false,
         ]
       );
-      echo 'succejjss';
       return self::$pdoInstance;
 
     } catch(\PDOException $e) {
@@ -31,4 +30,4 @@ class Database
 
 }
 
-Database::getInstance();
+// Database::getInstance();
