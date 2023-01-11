@@ -19,7 +19,7 @@ $_SESSION['csrf_token'] = '';
 
 
 $pdo = Database::getInstance();
-$userlogic = new UserLogic($pdo); 
+$userLogic = new UserLogic($pdo); 
 
 
 
@@ -137,7 +137,7 @@ if (strlen($other_address) >= 101)
 
 if (mb_strlen($password) != mb_strwidth($password))
 {
-    $err['password_zenkaku'] = 'パスワードは半角英数字でお願いします';
+    $err['password_hankaku'] = 'パスワードは半角英数字でお願いします';
 }
 
 // 8～20文字の文字入力数でない場合に「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
@@ -160,7 +160,7 @@ if (!isset($password))
 
 if (mb_strlen($password_cnf) != mb_strwidth($password_cnf))
 {
-    $err['password_cnf_zenkaku'] = 'パスワードは半角英数字でお願いします';
+    $err['password_cnf_hankaku'] = 'パスワードは半角英数字でお願いします';
 }
 
 // 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
@@ -198,9 +198,9 @@ if (strlen($email) >= 201)
  * あればtrueなければfalse
  * @var bool
  */
-$hasEmail = $userlogic->checkSameEmailExist($email);
+$hasEmail = $userLogic->checkSameDataExist('email', $email);
 
-if ($hasEmail)
+if ($hasEmail != false)
 {
     $err['email_duplicate'] = '入力されたemailは既に使用されています';
 }
@@ -213,10 +213,18 @@ if ($hasEmail)
 
 if (count($err) > 0)
 {
+
     $_SESSION = $err;
+    $_SESSION['last_name'] = $last_name;
+    $_SESSION['first_name'] = $first_name;
+    $_SESSION['sex'] = $sex;
+    $_SESSION['prefecture'] = $prefecture;
+    $_SESSION['other_address'] = $other_address;
+    $_SESSION['email'] = $email;
     header('Location: member_regist.php');
+    exit();
 } else {
-    $userlogic->createUser($_POST);
+    $userLogic->createUser($_POST);
 }
 
 ?>

@@ -17,17 +17,20 @@ class UserLogic {
      * @param string $email
      * @return bool
      */
-    public function checkSameEmailExist($email)
+    public function checkSameDataExist($column, $data)
     {
-        $sql = 'SELECT * FROM members WHERE email = :email';
+        $sql = 'SELECT * FROM members WHERE :column = :data';
         
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':column', $column);
+        $stmt->bindValue(':data', $data);
 
-        $return = $stmt->execute();
+        $stmt->execute();
 
-        return $return;
+        $user = $stmt->fetch();
+
+        return $user;
     }
 
     public function createUser(array $userData)
@@ -67,6 +70,38 @@ class UserLogic {
         // $_SESSION['login_user'] = ['id' => $id, 'name' => $userData['name']];
 
         // return $result;
+
+    }
+
+    /**
+     * 
+     * @param string $email, $password
+     * @return array|bool $member
+     */
+    public function login($email, $password)
+    {
+        $sql = 'SELECT * FROM members WHERE email = :email and password = :password';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':password', $password);
+
+        // $result = $stmt->execute();
+        $stmt->execute();
+        $member = $stmt->fetch();
+
+        return $member;
+
+    }
+
+    public function getNameByEmail($email)
+    {
+
+    }
+
+    public function checkAuthenticated()
+    {
 
     }
 }
