@@ -6,6 +6,8 @@ require_once("../App/Database.php");
 require_once("../App/UserLogic.php");
 require_once("../App/Token.php");
 
+use App\Token;
+
 
 $title = filter_input(INPUT_POST, "title");
 
@@ -74,12 +76,13 @@ if ($err_flg)
     <span style="display: inline"><?= $title?></span>
 
     <div>コメント</div>
-    <span><?= $comment ?></span>
+    <span><?= nl2br($comment) ?></span>
 
     <form action="<?= threadCreate ?>" method="POST">
         <button>スレッドを作成する</button>
         <input type="hidden" name="title" value="<?= $title ?>">
         <input type="hidden" name="comment" value="<?= $comment ?>">
+        <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
     </form>
     <button type="button" onclick="history.back()">戻る</button>
 </body>

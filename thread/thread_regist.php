@@ -28,7 +28,7 @@ if (isset($_SESSION['title'])
     && isset($_SESSION['comment']))
 {
     $title = $_SESSION['title'];
-    $comment = $_SESSION['comment'];
+    $comment = nl2br($_SESSION['comment']);
 
     unset($_SESSION['title']);
     unset($_SESSION['comment']);

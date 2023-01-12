@@ -1,11 +1,17 @@
 <?php
 
+session_start();
+
 require_once("../config.php");
 require_once("../App/Database.php");
 require_once("../App/UserLogic.php");
+require_once("../App/Token.php");
 
 use App\UserLogic;
 use App\Database;
+use App\Token;
+
+Token::validate();
 
 $pdo = Database::getInstance();
 $userLogic = new UserLogic($pdo); 

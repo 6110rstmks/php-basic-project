@@ -1,6 +1,6 @@
 <?php
 
-// session_start();
+session_start();
 require_once("../config.php");
 require_once("../App/Database.php");
 require_once("../App/threadLogic.php");
@@ -9,15 +9,12 @@ require_once("../App/ThreadLogic.php");
 
 use App\Database;
 use App\ThreadLogic;
+use App\Token;
 
+Token::validate();
 
 $title = filter_input(INPUT_POST, "title");
 $comment = filter_input(INPUT_POST, "comment");
-
-if (is_null($title))
-{
-    exit("不正なリクエストです");
-}
 
 
 $pdo = Database::getInstance();
