@@ -18,6 +18,7 @@ require_once("../config.php");
 <body>
 
     <h2>ログイン</h2>
+    <!-- <form action="./login_check.php" method="POST"> -->
     <form action="./login_check.php" method="POST">
     <form action="<?= __DIR__ .  login_check ?>" method="POST">
         <p>
@@ -34,7 +35,7 @@ require_once("../config.php");
         <?php endif; ?>
 
         <button>ログイン</button>
-        <button><a href="./top_blade.php">トップに戻る</a></button>
+        <button><a href="../<?= topPage ?>">トップに戻る</a></button>
 
     </form>
 </body>

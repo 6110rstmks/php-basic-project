@@ -49,7 +49,6 @@ $err = [];
 if (strlen($last_name) >= 21) {
     // 確認画面にリダイレクトする
     $err['last_name_count'] = '入力は 21 文字以下である必要があります';
-    exit;
 }
 
 // 「"7;d"''2;"」などの記号の文字列を入力してもエラーにならないか
@@ -219,8 +218,8 @@ if (count($err) > 0)
     $_SESSION['prefecture'] = $prefecture;
     $_SESSION['other_address'] = $other_address;
     $_SESSION['email'] = $email;
-    header('Location: '. registerFormPage);
-            exit();
+    header('Location: '. userRegisterFormPage);
+    exit();
 }
 
 ?>
@@ -251,7 +250,7 @@ if (count($err) > 0)
     <div>メールアドレス</div>
     <div><?= $email ?></div>
 
-    <form action="<?= registerCompletePage ?>" method="POST">
+    <form action="<?= userRegisterCompletePage ?>" method="POST">
 
         <input type="hidden" name="last_name" value="<?= $last_name ?>">
         <input type="hidden" name="first_name" value="<?= $first_name ?>">

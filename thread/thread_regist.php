@@ -26,7 +26,7 @@ if (!$logic_flg)
 </head>
 <body>
     <h1>スレッド作成フォーム</h1>
-    <form action="<?= __DIR__ . thread_check ?>">
+    <form action="<?= threadRegisterConfirmPage ?>">
         <p>
             <label for="">スレッドタイトル</label>
             <input type="text" name="title">
@@ -35,6 +35,9 @@ if (!$logic_flg)
             <label for="">コメント</label>
             <textarea name="comment" cols="30" rows="10"></textarea>
         </p>
+
+        <button>確認画面へ</button>
     </form>
+    <button><a href="../<?= topPage?>">トップへ戻る</a></button>
 </body>
 </html>

@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+require_once('../config.php');
 require_once('../App/UserLogic.php');
 
 use App\UserLogic;
@@ -26,4 +27,4 @@ $_SESSION = array();
 
 
 // $_SESSION['logout_msg'] = 'ログアウトが完了しました';
-header('Location: top_blade.php');
+header('Location:../' . topPage);

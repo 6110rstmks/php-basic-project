@@ -26,9 +26,6 @@ $login_flg = UserLogic::checkAuthenticated();
     <title>Document</title>
 </head>
 <body>
-    <?= $_SERVER['DOCUMENT_ROOT'] ?>
-    <?= __DIR__ ?>
-
     <header>
         <?php if ($login_flg): ?>
 
@@ -45,7 +42,7 @@ $login_flg = UserLogic::checkAuthenticated();
         <?php else: ?>
 
             <!-- <a href="./member_regist.php"><button>新規登録</button></a> -->
-            <a href="<?= dir2 . registerFormPage?>"><button>新規登録</button></a>
+            <a href="<?= dir2 . userRegisterFormPage ?>"><button>新規登録</button></a>
             <a href="<?= dir3 . loginPage ?>"><button>ログイン</button></a>
 
         <?php endif ; ?>

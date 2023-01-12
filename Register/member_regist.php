@@ -43,7 +43,7 @@ $_SESSION = array();
     <title>Document</title>
 </head>
 <body>
-    <form action="<?= registerConfirmPage ?>" method="POST">
+    <form action="<?= userRegisterConfirmPage ?>" method="POST">
         <h2>会員登録フォーム</h2>
         <p>
             <span>氏名</span>
@@ -143,7 +143,7 @@ $_SESSION = array();
         </p>
 
         <button>確認画面へ</button>
-        <button><a href="./top_blade.php">トップに戻る</a></button>
+        <button><a href="../<?= topPage ?>">トップに戻る</a></button>
     </form>
 </body>
 </html>

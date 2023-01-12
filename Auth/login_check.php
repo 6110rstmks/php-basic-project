@@ -33,7 +33,7 @@ if ($member == false)
     session_regenerate_id(true);
 
     $_SESSION['login_user'] = $member;
-    header('Location: ../' . topPage);
+    header('Location:../' . topPage);
 }
 
 
