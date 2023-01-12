@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once("./config.php");
+require_once("../config.php");
 require_once("../App/Token.php");
 
 use App\Token;
@@ -29,6 +29,7 @@ if (isset($_SESSION['last_name'])
     unset($_SESSION['other_address']);
     unset($_SESSION['email']);
 }
+
 $session_msgs = $_SESSION;
 $_SESSION = array();
 
@@ -42,7 +43,7 @@ $_SESSION = array();
     <title>Document</title>
 </head>
 <body>
-    <form action="./confirm_blade.php" method="POST">
+    <form action="<?= registerConfirmPage ?>" method="POST">
         <h2>会員登録フォーム</h2>
         <p>
             <span>氏名</span>

@@ -17,18 +17,18 @@ class UserLogic {
      * @param string $email
      * @return bool
      */
-    public function checkSameDataExist($column, $data)
+    public function checkEmailExist($data)
     {
-        $sql = 'SELECT * FROM members WHERE :column = :data';
-        
+        $sql = 'SELECT * FROM members WHERE email = :data';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':column', $column);
-        $stmt->bindValue(':data', $data);
 
-        $stmt->execute();
+        // $stmt->execute();
+        $stmt->execute(array(
+            ':data' => $data,
+        ));
 
-        $user = $stmt->fetch();
+        $user = $stmt->fetchAll();
 
         return $user;
     }
@@ -44,7 +44,7 @@ class UserLogic {
         $arr[] = $userData['first_name'];
         $arr[] = $userData['sex'];
         $arr[] = $userData['prefecture'];
-        $arr[] = $userData['other_address'];
+        $arr[] = isset($_Post['other_address']) ? $userData['other_address'] : null;
         $arr[] = $userData['password'];
         $arr[] = $userData['email'];
 
@@ -53,9 +53,6 @@ class UserLogic {
         $stmt = $this->pdo->prepare($sql);
 
         $stmt->execute($arr);
-
-
-
 
         // session_regenerate_id(true);
 
@@ -100,8 +97,40 @@ class UserLogic {
 
     }
 
-    public function checkAuthenticated()
+    /**
+     * ログインしているか判定
+     * @param void
+     * @return bool $login_flg
+     */
+    public static function checkAuthenticated()
     {
 
+        // ログインをしている場合、ログイン情報を格納。
+        // ログインをしていない場合はnull
+        $user_info = isset($_SESSION['login_user']) ? (array) $_SESSION['login_user'] : null;
+
+        /**
+         * @var bool
+         * ログインしているかを表す。
+         * false: ログインしていない
+         */
+        $login_flg = false;
+
+        // ログインしているユーザでトップ画面に入った場合
+        if (!is_null($user_info))
+        {
+            $login_flg = true;
+        }
+
+        return $login_flg;
+
+    }
+
+    /**
+     * 
+     */
+    public function logout()
+    {
+        $_SESSION = array();
     }
 }

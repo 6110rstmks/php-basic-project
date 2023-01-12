@@ -3,6 +3,8 @@ session_start();
 $session_msgs = $_SESSION;
 $_SESSION = array();
 
+require_once("../config.php");
+
 ?>
 
 <!DOCTYPE html>
@@ -14,8 +16,10 @@ $_SESSION = array();
     <title>Document</title>
 </head>
 <body>
+
     <h2>ログイン</h2>
     <form action="./login_check.php" method="POST">
+    <form action="<?= __DIR__ .  login_check ?>" method="POST">
         <p>
             <span>メールアドレス</span>
             <input type="email" name="email" id="" value="<?php if(isset($session_msgs['email']) ){ echo $session_msgs['email']; } ?>">

@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-require_once("./config.php");
+require_once("../config.php");
 require_once("../App/Database.php");
 require_once("../App/UserLogic.php");
 require_once("../App/Token.php");
@@ -27,12 +27,13 @@ $prefectures_array = array('北海道', '青森県', '岩手県', '宮城県', '
 
 $first_name = filter_input(INPUT_POST, "first_name");
 $last_name = filter_input(INPUT_POST, "last_name");
-$password = filter_input(INPUT_POST, "password");
 
 $sex = filter_input(INPUT_POST, "sex");
 
 $prefecture = filter_input(INPUT_POST, "prefecture");
 $other_address = filter_input(INPUT_POST, "other_address");
+
+$password = filter_input(INPUT_POST, "password");
 
 $password_cnf = filter_input(INPUT_POST, "password_cnf");
 
@@ -198,15 +199,12 @@ if (strlen($email) >= 201)
  * あればtrueなければfalse
  * @var bool
  */
-$hasEmail = $userLogic->checkSameDataExist('email', $email);
+$hasEmail = $userLogic->checkEmailExist($email);
 
 if ($hasEmail != false)
 {
     $err['email_duplicate'] = '入力されたemailは既に使用されています';
 }
-
-
-
 
 // --------------------------------
 
@@ -221,10 +219,8 @@ if (count($err) > 0)
     $_SESSION['prefecture'] = $prefecture;
     $_SESSION['other_address'] = $other_address;
     $_SESSION['email'] = $email;
-    header('Location: member_regist.php');
-    exit();
-} else {
-    $userLogic->createUser($_POST);
+    header('Location: '. registerFormPage);
+            exit();
 }
 
 ?>
@@ -239,7 +235,6 @@ if (count($err) > 0)
 </head>
 <body>
     <h2>会員登録確認画面</h2>
-
     <div>氏名</div>
     <span style="display: inline"><?= $last_name?></span>
     <span style="display: inline"><?php echo $first_name; ?></span>
@@ -256,7 +251,16 @@ if (count($err) > 0)
     <div>メールアドレス</div>
     <div><?= $email ?></div>
 
-    <button><a href="./<?= kanryougamen ?>">完了画面</a></button>
+    <form action="<?= registerCompletePage ?>" method="POST">
+
+        <input type="hidden" name="last_name" value="<?= $last_name ?>">
+        <input type="hidden" name="first_name" value="<?= $first_name ?>">
+        <input type="hidden" name="sex" value="<?= $sex ?>">
+        <input type="hidden" name="prefecture" value="<?= $prefecture ?>">
+        <input type="hidden" name="password" value="<?= $password ?>">
+        <input type="hidden" name="email" value="<?= $email ?>">
+        <button>完了画面</button>
+    </form>
     <button type="button" onclick="history.back()">戻る</button>
 </body>
 </html>

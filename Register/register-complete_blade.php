@@ -1,3 +1,20 @@
+<?php
+
+require_once("../config.php");
+require_once("../App/Database.php");
+require_once("../App/UserLogic.php");
+
+use App\UserLogic;
+use App\Database;
+
+$pdo = Database::getInstance();
+$userLogic = new UserLogic($pdo); 
+
+$userLogic->createUser($_POST);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

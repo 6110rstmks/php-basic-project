@@ -1,6 +1,6 @@
 <?php
 namespace App;
-require_once('../php/config.php');
+require_once('../config.php');
 
 class Database
 {
