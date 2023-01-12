@@ -19,7 +19,7 @@ define("userRegisterFormPage", "member_regist.php");
 
 define("userRegisterConfirmPage", "register_confirm_blade.php");
 
-define("userRegisterCompletePage", "register-complete_blade.php");
+define("userRegisterCompletePage", "register_complete_blade.php");
 
 // ----------------
 
@@ -36,9 +36,12 @@ define("topPage", "top_blade.php");
 
 // -----------------
 
+define("threadListPage", "thread.php");
+
 define("threadRegisterFormPage", "thread_regist.php");
 
-define("threadRegisterConfirmPage", "thread_check.php");
+define("threadRegisterConfirmPage", "thread_confirm_blade.php");
 
-// define("");
+define("threadCreate", "thread_create.php")
+
 ?>

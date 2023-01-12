@@ -18,9 +18,7 @@ require_once("../config.php");
 <body>
 
     <h2>ログイン</h2>
-    <!-- <form action="./login_check.php" method="POST"> -->
-    <form action="./login_check.php" method="POST">
-    <form action="<?= __DIR__ .  login_check ?>" method="POST">
+    <form action="<?= login_check ?>" method="POST">
         <p>
             <span>メールアドレス</span>
             <input type="email" name="email" id="" value="<?php if(isset($session_msgs['email']) ){ echo $session_msgs['email']; } ?>">

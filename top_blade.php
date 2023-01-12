@@ -12,7 +12,8 @@ use App\UserLogic;
 // ログインをしていない場合はnull
 $user_info = isset($_SESSION['login_user']) ? (array) $_SESSION['login_user'] : null;
 
-$login_flg = UserLogic::checkAuthenticated();
+// ログインユーザ、ゲスト共用ページのため、trueを指定
+$login_flg = UserLogic::checkAuthenticated(true);
 
 ?>
 

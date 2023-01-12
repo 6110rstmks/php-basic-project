@@ -99,10 +99,22 @@ class UserLogic {
 
     /**
      * ログインしているか判定
-     * @param void
+     * 
+     * @param bool $return_flg
+     * $return_flgがtrueの場合、ログインしていなければ、
+     * メソッドはfalseを返す
+     * （ログインユーザ、ゲスト共用ページで用いる）
+     * 
+     * 引数に何も指定しない場合（falseの場合）、
+     * ログインしていなければ、
+     * exit()で処理を中断させる。
+     * ログインユーザ専用ページで用いる
+     * （ゲストユーザがログイン専用ページにアクセスしたとき弾く）
+     * 
      * @return bool $login_flg
+     * true:ログインユーザ
      */
-    public static function checkAuthenticated()
+    public static function checkAuthenticated($return_flg = false)
     {
 
         // ログインをしている場合、ログイン情報を格納。
@@ -113,17 +125,23 @@ class UserLogic {
          * @var bool
          * ログインしているかを表す。
          * false: ログインしていない
+         * true: ログインしている
          */
-        $login_flg = false;
+        // $login_flg = false;
 
         // ログインしているユーザでトップ画面に入った場合
         if (!is_null($user_info))
         {
-            $login_flg = true;
+            return true;
         }
 
-        return $login_flg;
+        if ($return_flg)
+        {
+            return false;
+        }
 
+        exit("ログインしていない場合はアクセスできません。");
+        
     }
 
     /**

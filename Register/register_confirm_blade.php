@@ -258,6 +258,11 @@ if (count($err) > 0)
         <input type="hidden" name="prefecture" value="<?= $prefecture ?>">
         <input type="hidden" name="password" value="<?= $password ?>">
         <input type="hidden" name="email" value="<?= $email ?>">
+
+        <!--  二重送信対策-->
+        <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
+
+
         <button>完了画面</button>
     </form>
     <button type="button" onclick="history.back()">戻る</button>
