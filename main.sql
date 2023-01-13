@@ -12,3 +12,4 @@ CREATE TABLE members (
   deleted_at TIMESTAMP NULL,
   PRIMARY KEY (id)
 );
+

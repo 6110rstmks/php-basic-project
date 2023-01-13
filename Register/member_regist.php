@@ -3,32 +3,17 @@
 session_start();
 
 require_once("../config.php");
+require_once("../function.php");
 require_once("../App/Token.php");
 
 use App\Token;
 
-if (isset($_SESSION['last_name']) 
-    && isset($_SESSION['first_name']) 
-    && isset($_SESSION['sex']) 
-    && isset($_SESSION['prefecture']) 
-    && isset($_SESSION['other_address']) 
-    && isset($_SESSION['email']))
-{
-    $last_name = $_SESSION['last_name'];
-    $first_name = $_SESSION['first_name'];
-    $sex = $_SESSION['sex'];
-    $prefecture = $_SESSION['prefecture'];
-    $other_address = $_SESSION['other_address'];
-    $email = $_SESSION['email'];
-
-    // $_SESSION['last_name'] = '';
-    unset($_SESSION['last_name']);
-    unset($_SESSION['first_name']);
-    unset($_SESSION['sex']);
-    unset($_SESSION['prefecture']);
-    unset($_SESSION['other_address']);
-    unset($_SESSION['email']);
-}
+$last_name = FormValueRetention('last_name');
+$first_name = FormValueRetention('first_name');
+$sex = FormValueRetention('sex');
+$prefecture = FormValueRetention('prefecture');
+$other_address = FormValueRetention('other_address');
+$email = FormValueRetention('email');
 
 $session_msgs = $_SESSION;
 $_SESSION = array();
