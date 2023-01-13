@@ -16,7 +16,9 @@ class UserLogic {
      * 
      * @param string $email
      * @return bool
+     * 
      */
+
     public function checkEmailExist($data)
     {
         $sql = 'SELECT * FROM members WHERE email = :data';
@@ -74,6 +76,7 @@ class UserLogic {
      * 
      * @param string $email, $password
      * @return array|bool $member
+     * 
      */
     public function login($email, $password)
     {
@@ -84,7 +87,6 @@ class UserLogic {
         $stmt->bindValue(':email', $email);
         $stmt->bindValue(':password', $password);
 
-        // $result = $stmt->execute();
         $stmt->execute();
         $member = $stmt->fetch();
 

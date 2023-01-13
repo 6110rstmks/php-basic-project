@@ -3,7 +3,7 @@
 session_start();
 require_once("../config.php");
 require_once("../App/Database.php");
-require_once("../App/threadLogic.php");
+require_once("../App/ThreadLogic.php");
 require_once("../App/Token.php");
 require_once("../App/ThreadLogic.php");
 

@@ -21,7 +21,9 @@ class Database
           \PDO::ATTR_EMULATE_PREPARES => false,
         ]
       );
+      // echo 'success';
       return self::$pdoInstance;
+
 
     } catch(\PDOException $e) {
       echo $e -> getMessage();
@@ -30,4 +32,4 @@ class Database
 
 }
 
-// Database::getInstance();
+Database::getInstance();
