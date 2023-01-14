@@ -3,15 +3,12 @@
 session_start();
 
 require_once("../config.php");
-require_once('../App/UserLogic.php');
-require_once('../App/ThreadLogic.php');
-require_once('../App/Database.php');
 
-use App\UserLogic;
+use App\MemberLogic;
 use App\ThreadLogic;
 use App\Database;
 
-$auth_flg = UserLogic::checkAuthenticated(true);
+$auth_flg = MemberLogic::checkAuthenticated(true);
 
 // ワードからスレッドを取得する
 if (isset($_POST['word']))
@@ -46,7 +43,7 @@ if (isset($_POST['word']))
         <?php foreach($threads as $thread): ?>
             <div>
                 <span>ID</span><?= $thread['id']?>
-                <span><?= $thread['title'] ?></span>
+                <a href="thread_detail.php?id=<?= $thread['id'] ?>"><?= $thread['title'] ?></a>
                 <span><?= $thread['created_at']?></span>
             </div>
         <?php endforeach; ?>

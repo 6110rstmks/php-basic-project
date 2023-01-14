@@ -3,7 +3,7 @@ session_start();
 $session_msgs = $_SESSION;
 $_SESSION = array();
 
-require_once("../config.php");
+require_once(__DIR__ . '/../config.php');
 
 ?>
 

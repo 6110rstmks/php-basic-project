@@ -2,9 +2,8 @@
 
 session_start();
 
-require_once("../config.php");
+require_once(__DIR__ . '/../config.php');
 require_once("../function.php");
-require_once("../App/Token.php");
 
 use App\Token;
 
@@ -28,7 +27,7 @@ $_SESSION = array();
     <title>Document</title>
 </head>
 <body>
-    <form action="<?= userRegisterConfirmPage ?>" method="POST">
+    <form action="<?= memberRegisterConfirmPage ?>" method="POST">
         <h2>会員登録フォーム</h2>
         <p>
             <span>氏名</span>

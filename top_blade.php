@@ -3,17 +3,17 @@
 session_start();
 
 require_once("./config.php");
-require_once("./App/UserLogic.php");
+require_once("./App/MemberLogic.php");
 
-use App\UserLogic;
+use App\MemberLogic;
 
 
 // ログインをしている場合、ログイン情報を格納。
 // ログインをしていない場合はnull
-$user_info = isset($_SESSION['login_user']) ? (array) $_SESSION['login_user'] : null;
+$member_info = isset($_SESSION['login_member']) ? (array) $_SESSION['login_member'] : null;
 
 // ログインユーザ、ゲスト共用ページのため、trueを指定
-$login_flg = UserLogic::checkAuthenticated(true);
+$login_flg = MemberLogic::checkAuthenticated(true);
 
 ?>
 
@@ -30,7 +30,7 @@ $login_flg = UserLogic::checkAuthenticated(true);
     <header>
         <?php if ($login_flg): ?>
 
-            <span>ようこそ、<?= $user_info['name_sei'] . $user_info['name_mei'] ?>さん</span>
+            <span>ようこそ、<?= $member_info['name_sei'] . $member_info['name_mei'] ?>さん</span>
 
             <button><a href="<?= dir4 . threadRegisterFormPage?>">新規スレッド作成</a></button>
 
@@ -43,7 +43,7 @@ $login_flg = UserLogic::checkAuthenticated(true);
         <?php else: ?>
 
             <!-- <a href="./member_regist.php"><button>新規登録</button></a> -->
-            <a href="<?= dir2 . userRegisterFormPage ?>"><button>新規登録</button></a>
+            <a href="<?= dir2 . memberRegisterFormPage ?>"><button>新規登録</button></a>
             <a href="<?= dir3 . loginPage ?>"><button>ログイン</button></a>
 
         <?php endif ; ?>

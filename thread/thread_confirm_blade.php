@@ -1,10 +1,8 @@
 <?php
 
 session_start();
-require_once("../config.php");
-require_once("../App/Database.php");
-require_once("../App/UserLogic.php");
-require_once("../App/Token.php");
+require_once(__DIR__ . '/../config.php');
+
 
 use App\Token;
 

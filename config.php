@@ -10,16 +10,46 @@ define('DB_PASS', '119089');
 // define('DB_USER', 'test');
 // define('DB_PASS', '119089Meisei/');
 
+//---------------------------
+
+spl_autoload_register(function ($class) {
+    
+    $prefix = 'App';
+
+    if (strpos($class, $prefix) === 0)
+    {
+        // $fileName = sprintf(__DIR__ . '/%s.php', substr($class, strlen($prefix)));
+        $fileName = sprintf(__DIR__ . '\%s.php', $class);
+    }
+
+    if (file_exists($fileName))
+    {
+        require($fileName);
+
+    } else {
+        echo 'File not found' . $fileName;
+        exit;
+    }
+
+});
+
+
 define("dir1", "App/");
 define("dir2", "Register/");
 define("dir3", "Auth/");
 define("dir4", "thread/");
 
-define("userRegisterFormPage", "member_regist.php");
+define("MemberLogic","MemberLogic.php");
+define("ThreadLogic","ThreadLogic.php");
 
-define("userRegisterConfirmPage", "register_confirm_blade.php");
 
-define("userRegisterCompletePage", "register_complete_blade.php");
+// ---------------------------
+
+define("memberRegisterFormPage", "member_regist.php");
+
+define("memberRegisterConfirmPage", "register_confirm_blade.php");
+
+define("memberRegisterCompletePage", "register_complete_blade.php");
 
 // ----------------
 

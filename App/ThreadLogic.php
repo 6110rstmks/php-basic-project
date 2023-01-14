@@ -6,9 +6,16 @@ class ThreadLogic {
 
     private $pdo;
 
-    function __construct($pdo)
+    private $member;
+
+    function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+    public function setMember(Member $member)
+    {
+        $this->member = $member;
     }
 
     /**
@@ -16,27 +23,31 @@ class ThreadLogic {
      * @param string $email
      * @return bool
      */
-    public function checkEmailExist($data)
-    {
-        $sql = 'SELECT * FROM members WHERE email = :data';
+    // public function checkEmailExist($data)
+    // {
+    //     $sql = 'SELECT * FROM members WHERE email = :data';
 
-        $stmt = $this->pdo->prepare($sql);
+    //     $stmt = $this->pdo->prepare($sql);
 
-        // $stmt->execute();
-        $stmt->execute(array(
-            ':data' => $data,
-        ));
+    //     // $stmt->execute();
+    //     $stmt->execute(array(
+    //         ':data' => $data,
+    //     ));
 
-        $user = $stmt->fetchAll();
+    //     $user = $stmt->fetchAll();
 
-        return $user;
-    }
+    //     return $user;
+    // }
 
+    /**
+     * 
+     * DIでやりたいけどやり方がわからない、またっｇｇｒ
+     */
     public function createThread(array $threadData)
     {
-        // $result = false; 
-        // $sql = 'INSERT INTO threads (title, content, created_at) VALUES (?, ?, now())';
+
         $sql = 'INSERT INTO threads (title, content, created_at) VALUES (:title, :content, now())';
+        // $sql = 'INSERT INTO threads (member_id, title, content, created_at) VALUES (:title, :content, now())';
 
         $arr = [];
 
@@ -44,23 +55,19 @@ class ThreadLogic {
 
         $comment = $threadData['comment'];
 
-
-
-        // $arr[] = $threadData['title'];
-        // $arr[] = $threadData['comment'];
-
-
-
         $stmt = $this->pdo->prepare($sql);
 
         $stmt->bindValue('title', $title);
         $stmt->bindValue('content', $comment);
 
-
-        // $stmt->execute($arr);
         $stmt->execute();
     }
 
+    /**
+     * ワードからスレッド検索してthreadのModelを返す
+     * @param str $word
+     * @return array
+     */
     public function searchThread($word)
     {
         $pattern = '%' . $word . '%'; 
@@ -73,5 +80,22 @@ class ThreadLogic {
         $threads = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $threads;
+    }
+
+    /**
+     * 
+     * idからスレッドを取得する
+     * 
+     */
+    public function getThreadById($id)
+    {
+        $sql = "SELECT * FROM threads WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $thread = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $thread;
     }
 }

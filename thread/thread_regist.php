@@ -2,23 +2,22 @@
 
 session_start();
 
-require_once("../config.php");
-require_once("../App/UserLogic.php");
+require_once(__DIR__ . '/../config.php');
 
-use App\UserLogic;
+use App\MemberLogic;
 
 // ログインしていなければcheckAuthenticated method内において
 // exitで処理を中断させる。
 // ログインユーザ専用ページのためfalseを指定
-$logic_flg = UserLogic::checkAuthenticated(false);
+$logic_flg = MemberLogic::checkAuthenticated(false);
 
 
 // ②の中で$_SESSION = array();の処理をするために
 // 変数を退避
-if (isset($_SESSION['login_user']))
+if (isset($_SESSION['login_member']))
 {
-    $login_user = (array) $_SESSION['login_user'];
-    unset($_SESSION['login_user']);
+    $login_member = (array) $_SESSION['login_member'];
+    unset($_SESSION['login_member']);
 }
 
 
@@ -46,7 +45,7 @@ if (isset($_SESSION['thread_title_required'])
 }
 
 // 退避した変数を再び格納
-$_SESSION['login_user'] = $login_user;
+$_SESSION['login_member'] = $login_member;
 
 ?>
 

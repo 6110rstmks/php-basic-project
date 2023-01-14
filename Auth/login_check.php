@@ -2,12 +2,10 @@
 
 session_start();
 
-require_once("../config.php");
-require_once("../App/UserLogic.php");
-require_once("../App/Database.php");
+require_once(__DIR__ . '/../config.php');
 
 use App\Database;
-use App\UserLogic;
+use App\MemberLogic;
 
 $email = filter_input(INPUT_POST, 'email');
 
@@ -15,9 +13,9 @@ $password = filter_input(INPUT_POST, 'password');
 
 $pdo = Database::getInstance();
 
-$userLogic = new UserLogic($pdo);
+$memberLogic = new MemberLogic($pdo);
 
-$member = $userLogic->login($email, $password); 
+$member = $memberLogic->login($email, $password); 
 
 // 一致するIdもしくはパスワードがなければ
 if ($member == false)
@@ -32,7 +30,7 @@ if ($member == false)
 } else {
     session_regenerate_id(true);
 
-    $_SESSION['login_user'] = $member;
+    $_SESSION['login_member'] = $member;
     header('Location:../' . topPage);
 }
 

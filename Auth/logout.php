@@ -1,10 +1,9 @@
 <?php
 
 session_start();
-require_once('../config.php');
-require_once('../App/UserLogic.php');
+require_once(__DIR__ . '/../config.php');
 
-use App\UserLogic;
+use App\MemberLogic;
 
 if (!$logout = filter_input(INPUT_POST, 'logout'))
 {
@@ -13,7 +12,7 @@ if (!$logout = filter_input(INPUT_POST, 'logout'))
 }
 
 // ログインしているか判定する、セッションが切れていたらログインしてくださいとメッセージを出す。
-// $result = UserLogic::checkAuthenticated();
+// $result = MemberLogic::checkAuthenticated();
 
 // if (!$result) {
 //     // $_SESSION['logout_msg'] = '一定期間経過したので再ログインが必要です。';
@@ -22,7 +21,7 @@ if (!$logout = filter_input(INPUT_POST, 'logout'))
 //     return;
 // }
 
-// UserLogic::logout();
+// MemberLogic::logout();
 $_SESSION = array();
 
 

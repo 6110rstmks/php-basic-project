@@ -1,20 +1,19 @@
 <?php
 
-session_start();
-
 require_once(__DIR__ . '/../config.php');
 
 
 use App\MemberLogic;
+use App\ThreadLogic;
 use App\Database;
-use App\Token;
-
-Token::validate();
 
 $pdo = Database::getInstance();
-$memberLogic = new MemberLogic($pdo); 
 
-$memberLogic->createMember($_POST);
+$threadLogic = new ThreadLogic($pdo);
+
+$thread_num = (int) $_GET['id'];
+
+$thread = $threadLogic->getThreadById($thread_num);
 
 
 ?>
@@ -28,7 +27,7 @@ $memberLogic->createMember($_POST);
     <title>Document</title>
 </head>
 <body>
-<h1>会員登録完了</h1>
-<h2>会員登録が完了しました。</h2>
+    <h2><?= $thread['title'] ?></h2>  
+    <?= $thread['created_at'] ?>
 </body>
 </html>

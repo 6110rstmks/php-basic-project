@@ -2,12 +2,9 @@
 
 session_start();
 require_once("../config.php");
-require_once("../App/Database.php");
-require_once("../App/UserLogic.php");
-require_once("../App/Token.php");
 
 
-use App\UserLogic;
+use App\MemberLogic;
 use App\Database;
 use App\Token;
 
@@ -19,7 +16,7 @@ $_SESSION['csrf_token'] = '';
 
 
 $pdo = Database::getInstance();
-$userLogic = new UserLogic($pdo); 
+$memberLogic = new MemberLogic($pdo); 
 
 
 
@@ -198,7 +195,7 @@ if (strlen($email) >= 201)
  * あればtrueなければfalse
  * @var bool
  */
-$hasEmail = $userLogic->checkEmailExist($email);
+$hasEmail = $memberLogic->checkEmailExist($email);
 
 if ($hasEmail != false)
 {
@@ -218,7 +215,7 @@ if (count($err) > 0)
     $_SESSION['prefecture'] = $prefecture;
     $_SESSION['other_address'] = $other_address;
     $_SESSION['email'] = $email;
-    header('Location: '. userRegisterFormPage);
+    header('Location: '. memberRegisterFormPage);
     exit();
 }
 
@@ -250,7 +247,7 @@ if (count($err) > 0)
     <div>メールアドレス</div>
     <div><?= $email ?></div>
 
-    <form action="<?= userRegisterCompletePage ?>" method="POST">
+    <form action="<?= memberRegisterCompletePage ?>" method="POST">
 
         <input type="hidden" name="last_name" value="<?= $last_name ?>">
         <input type="hidden" name="first_name" value="<?= $first_name ?>">
