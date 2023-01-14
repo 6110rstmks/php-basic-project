@@ -41,13 +41,13 @@ class ThreadLogic {
 
     /**
      * 
-     * DIでやりたいけどやり方がわからない、またっｇｇｒ
+     * @param array $threadData, int $member_id
+     * 
      */
-    public function createThread(array $threadData)
+    public function createThread(array $threadData, int $id)
     {
 
-        $sql = 'INSERT INTO threads (title, content, created_at) VALUES (:title, :content, now())';
-        // $sql = 'INSERT INTO threads (member_id, title, content, created_at) VALUES (:title, :content, now())';
+        $sql = 'INSERT INTO threads (member_id, title, content, created_at) VALUES (:member_id, :title, :content, now())';
 
         $arr = [];
 
@@ -59,6 +59,7 @@ class ThreadLogic {
 
         $stmt->bindValue('title', $title);
         $stmt->bindValue('content', $comment);
+        $stmt->bindValue('member_id', $id);
 
         $stmt->execute();
     }

@@ -14,13 +14,10 @@ define('DB_PASS', '119089');
 
 spl_autoload_register(function ($class) {
     
-    $prefix = 'App';
-
-    if (strpos($class, $prefix) === 0)
-    {
-        // $fileName = sprintf(__DIR__ . '/%s.php', substr($class, strlen($prefix)));
-        $fileName = sprintf(__DIR__ . '\%s.php', $class);
-    }
+    // if (strpos($class, $prefix) === 0)
+    // {
+    $fileName = sprintf(__DIR__ . '\%s.php', $class);
+    // }
 
     if (file_exists($fileName))
     {

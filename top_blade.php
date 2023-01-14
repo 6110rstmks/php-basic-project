@@ -7,7 +7,6 @@ require_once("./App/MemberLogic.php");
 
 use App\MemberLogic;
 
-
 // ログインをしている場合、ログイン情報を格納。
 // ログインをしていない場合はnull
 $member_info = isset($_SESSION['login_member']) ? (array) $_SESSION['login_member'] : null;

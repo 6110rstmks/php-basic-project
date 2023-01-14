@@ -11,6 +11,21 @@ class MemberLogic {
         $this->pdo = $pdo;
     }
 
+    public function getMemberById($id)
+    {
+        $sql = 'SELECT * FROM members Where id = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':id', $id);
+
+        $stmt->execute();
+
+        $member = $stmt->fetchObject();
+
+        return $member;
+    }
+
     /**
      * 
      * @param string $email
@@ -85,10 +100,9 @@ class MemberLogic {
         $stmt->bindValue(':password', $password);
 
         $stmt->execute();
-        $member = $stmt->fetch();
+        $member = $stmt->fetchObject();
 
         return $member;
-
     }
 
     public function getNameByEmail($email)

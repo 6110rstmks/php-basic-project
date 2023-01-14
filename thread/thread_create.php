@@ -18,13 +18,11 @@ $comment = filter_input(INPUT_POST, "comment");
 $pdo = Database::getInstance();
 $threadLogic = new ThreadLogic($pdo); 
 
-$memberLogic = new 
+// ログインしているメンバのID
+$member_id = $_SESSION['login_member']['id'];
 
-// $member = new 
 
-$threadLogic->setMember();
-
-$threadLogic->createThread($_POST);
+$threadLogic->createThread($_POST, $member_id);
 
 header("Location:" . threadListPage);
 

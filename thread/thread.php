@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once("../config.php");
+require_once(__DIR__ . '/../config.php');
 
 use App\MemberLogic;
 use App\ThreadLogic;
@@ -48,6 +48,8 @@ if (isset($_POST['word']))
             </div>
         <?php endforeach; ?>
     <?php endif;?>
+
+
 
 
     <button><a href="../<?= topPage ?>">トップに戻る</a></button>
