@@ -13,4 +13,26 @@ CREATE TABLE members (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE threads (
+    id INT NOT NULL AUTO_INCREMENT,
+    member_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    updated_at TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    deleted_at TIMESTAMP null ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE comments (
+    id INT NOT NULL AUTO_INCREMENT,
+    member_id INT NOT NULL,
+    thread_id INT NOT NULL,
+    comment TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    updated_at TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    deleted_at TIMESTAMP null ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
 

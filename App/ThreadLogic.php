@@ -99,4 +99,48 @@ class ThreadLogic {
 
         return $thread;
     }
+
+    /**
+     * 
+     */
+    public function prevThreadCheck($threadId)
+    {
+        $threadId -=1;
+        $sql = 'SELECT * FROM threads WHERE id = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $threadId);
+
+        $stmt->execute();
+
+        $prevThread = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($prevThread != false)
+        {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public function nextThreadCheck($threadId)
+    {
+        $threadId +=1;
+        $sql = 'SELECT * FROM threads WHERE id = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $threadId);
+
+        $stmt->execute();
+
+        $prevThread = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($prevThread != false)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

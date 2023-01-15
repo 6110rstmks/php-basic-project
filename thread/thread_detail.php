@@ -13,16 +13,42 @@ $pdo = Database::getInstance();
 $threadLogic = new ThreadLogic($pdo);
 $memberLogic = new MemberLogic($pdo);
 
+/**
+ * 
+ * @var int
+ */
 $thread_num = (int) $_GET['id'];
 
 $thread = $threadLogic->getThreadById($thread_num);
 
+if (!$thread)
+{
+    exit('スレッドが存在しない');
+}
+
 // ログインしているメンバのID
-$member_id = $_SESSION['login_member']['id'];
+if (isset($_SESSION['login_member']))
+{
+    $member_id = $_SESSION['login_member']['id'];
+}
 
-$memberLinkedThread = $memberLogic->getMemberById($member_id);
+// スレッドに紐づいたメンバの情報を取得
+$memberLinkedThread = $memberLogic->getMemberById($thread['member_id']);
 
+
+/**
+ * ログインしているかどうか
+ * @var bool
+ */
 $auth_flg = MemberLogic::checkAuthenticated(true);
+
+/**
+ * 前ページがあるかどうか
+ * @var bool
+ */
+$prevThreadFlag = $threadLogic->prevThreadCheck($thread_num);
+$nextThreadFlag = $threadLogic->nextThreadCheck($thread_num);
+
 
 ?>
 
@@ -35,13 +61,34 @@ $auth_flg = MemberLogic::checkAuthenticated(true);
     <title>Document</title>
 </head>
 <body>
+    <a href="<?= threadListPage ?>"><button>スレッド一覧に戻る</button></a>
+
     <h2><?= $thread['title'] ?></h2>  
     <?= $thread['created_at'] ?>
 
-    <hr>
+    <div style="height: 20px; width: auto; background-color: gray;">
+        <?php 
+            if ($prevThreadFlag)
+            {
+                echo '<a style="color: #0066CC;" href="thread_detail.php?id=' . $thread_num - 1 . '">前へ</a>';
+            } else {
+                echo '<a style="color: #707070l;">前へ</a>';
+            }
+
+            if ($nextThreadFlag)
+            {
+                echo '<a style="margin-left: 260px; color: #0066CC;" href="thread_detail.php?id=' . $thread_num + 1 . '">次へ</a>';
+            } else {
+                echo '<a style="margin-left: 260px; background-color: #707070l;">次へ</a>';
+            }
+
+        ?>
+    </div>
 
     <span>投稿者:</span>
-    <span><?= $memberLinkedThread->name_sei . $memberLinkedThread->name_mei ?></>
+    <?php if (isset($memberLinkedThread)): ?>
+        <span><?= $memberLinkedThread->name_sei . $memberLinkedThread->name_mei ?></>
+    <?php endif; ?>
     <span><?= $thread['created_at'] ?></span>
 
 
