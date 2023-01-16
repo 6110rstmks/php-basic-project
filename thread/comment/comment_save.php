@@ -26,9 +26,9 @@ $commentLogic = new CommentLogic($pdo);
 
 $err = [];
 
-if (!isset($comment))
+if ($comment == '')
 {
-    $err['comment_required'] = 'コメントを入力する';
+    $err['comment_required'] = 'コメントを入力してください';
 }
 
 if (strlen($comment) >= 501)

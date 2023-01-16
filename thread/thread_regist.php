@@ -62,7 +62,6 @@ $_SESSION['login_member'] = $login_member;
 
         if (isset($session_err_msgs))
         {
-
             var_dump($session_err_msgs);
         }
     ?>

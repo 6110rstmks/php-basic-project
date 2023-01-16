@@ -19,20 +19,33 @@ $commentLogic = new CommentLogic($pdo);
  * 
  * @var int
  */
-$thread_num = (int) $_GET['id'];
+try {
+    $thread_num = (int) $_GET['id'];
+} catch(\Exception $ex) {
+}
 
-$thread = $threadLogic->getThreadById($thread_num);
 
-if (!$thread)
+if (!$thread_num)
 {
     exit('スレッドが存在しない');
 }
+
+$thread = $threadLogic->getThreadById($thread_num);
 
 // ログインしているメンバのIDを取得
 if (isset($_SESSION['login_member']))
 {
     $member_id = $_SESSION['login_member']['id'];
     // $member_id = $_SESSION['login_member']->id;
+}
+
+// コメントのフォームが空だった場合に受け取ったエラーメッセージを
+// 変数に格納
+
+if (isset($_SESSION['err']))
+{
+    $errs = $_SESSION['err'];
+    unset($_SESSION['err']);
 }
 
 // スレッドに紐づいたメンバの情報を取得
@@ -79,6 +92,7 @@ if (isset($_POST['comment_pager']))
     $now_comment_pager = 1;
 }
 
+// ＜前へ＞のリンクにいれるためのページナンバー
 $prev_comment_pager = $now_comment_pager == 1 ? null : max($now_comment_pager - 1, 1); 
 $next_comment_pager = $now_comment_pager == $comment_pager_ttl ? null : min($now_comment_pager + 1, $comment_ttl); 
 
@@ -90,6 +104,16 @@ $offset = ($now_comment_pager - 1) * 5;
  * @var array
  */
 $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
+
+
+// スレッド投稿時間作成のための変数を用意
+$month = substr($thread['created_at'], 5, 2);
+$day = substr($thread['created_at'], 8, 2);
+$year = substr($thread['created_at'], 2, 2);
+$hour = substr($thread['created_at'], 11, 2);
+$minute = substr($thread['created_at'], 14, 2);
+
+$thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $minute;
 
 ?>
 
@@ -105,18 +129,20 @@ $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
     <a href="<?= threadListPage ?>"><button>スレッド一覧に戻る</button></a>
 
     <h2><?= $thread['title'] ?></h2>  
-    <p><?= $comment_ttl ?>コメント</p>
-    <?= $thread['created_at'] ?>
+    <span><?= $comment_ttl ?>コメント</span>
+    <span><?= $thread_detail_time ?></span>
 
+
+    <!-- 前のスレッドへ、次のスレッドへの部分 -->
     <div style="height: 20px; width: auto; background-color: gray;">
         <?php if ($prevThreadFlag): ?>
-            <a style="color: #0066CC;" href="thread_detail.php?id=' . $thread_num - 1 . '">前へ</a>
+            <a style="color: #0066CC;" href="thread_detail.php?id=<?= $thread_num - 1?>">前へ</a>
         <?php else: ?>   
             <a style="color: #707070l;">前へ</a>
         <?php endif; ?>
 
-        <?php if ($prevThreadFlag): ?>
-            <a style="margin-left: 260px; color: #0066CC;" href="thread_detail.php?id=' . $thread_num + 1 . '">次へ</a>
+        <?php if ($nextThreadFlag): ?>
+            <a style="margin-left: 260px; color: #0066CC;" href="thread_detail.php?id=<?= $thread_num + 1 ?>">次へ</a>
         <?php else: ?>   
             <a style="margin-left: 260px; background-color: #707070l;">次へ</a>
         <?php endif; ?>
@@ -128,7 +154,7 @@ $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
             <?php if (isset($memberLinkedThread)): ?>
                 <span><?= $memberLinkedThread->name_sei . $memberLinkedThread->name_mei ?></>
             <?php endif; ?>
-            <span><?= $thread['created_at'] ?></span>
+            <?= $thread['created_at'] ?>
         </div>
     
         <div><?= $thread['content']?></div>
@@ -138,9 +164,20 @@ $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
         <!-- コメント表示部分 -->
         <?php if (isset($comments)):?>
             <?php foreach($comments as $comment): ?>
+
+                <?php
+                    $comment_year = substr($comment['created_at'], 0, 4);
+                    $comment_month = substr($comment['created_at'], 5, 2);
+                    $comment_day = substr($comment['created_at'], 8, 2);
+                    $comment_hour = substr($comment['created_at'], 11, 2);
+                    $comment_minute = substr($comment['created_at'], 14, 2);
+
+                    $comment_time = $comment_year . '.' . $comment_month . '.' . $comment_day . '.' . $comment_hour . ':' . $comment_minute;
+                ?>
                 <div>
                     <span><?= $comment['id'] ?></span>
                     <span><?= $comment['comment'] ?></span>
+                    <span><?= $comment_time ?></span>
                     <hr>
                 </div>
     
@@ -149,11 +186,11 @@ $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
     </div>
 
     <!-- コメントのページャー -->
-    <div style="height: 20px; width: auto; background-color: gray;">
+    <div style="height: 20px; width: auto; background-color: #BEBEBE;">
         <!-- ＜前へ＞ -->
         <form action="" style="display: inline;" class="comment-pager-form1" method="POST">
             <?php if (is_null($prev_comment_pager)): ?>
-                <span>前へ</span>
+                <span style="font-size: 13.8px">前へ</span>
             <?php else:?>
                 <a class="prev-button" style="cursor: pointer">前へ</a>
             <?php endif;?>
@@ -164,9 +201,9 @@ $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
         <!-- ＜後へ＞ -->
         <form action="" style="display: inline; margin-left: 50px;" class="comment-pager-form2" method="POST">
             <?php if (is_null($next_comment_pager)): ?>
-                <span>次へ</span>
+                <span style="font-size: 12px">次へ</span>
             <?php else:?>
-                <a class="prev-button" style="cursor: pointer">次へ</a>
+                <a class="prev-button" style="cursor: pointer; font-size: 15px">次へ</a>
             <?php endif;?>
 
             <input type="hidden" name="comment_pager" value="<?= $next_comment_pager ?>">
@@ -181,6 +218,12 @@ $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
             <input type="hidden" name="thread_id" value="<?= $thread_num?>">
             <button>コメントする</button>
         </form>
+
+        <?php if (isset($errs)): ?>
+            <?php foreach($errs as $err): ?>
+                <span style="color: red"><?= $err ?></p>
+            <?php endforeach;?>
+        <?php endif;?>
     <?php endif;?>
 
     <script>

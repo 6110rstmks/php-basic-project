@@ -30,8 +30,6 @@ $_SESSION = array();
     <title>Document</title>
 </head>
 <body>
-    <?= __DIR__ ?>
-    <?= PHP_OS ?>
     <form action="<?= memberRegisterConfirmPage ?>" method="POST">
         <h2>会員登録フォーム</h2>
         <p>
