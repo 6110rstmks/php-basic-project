@@ -47,6 +47,11 @@ $login_flg = MemberLogic::checkAuthenticated(true);
 
         <?php endif ; ?>
 
+        <?php if ($login_flg): ?>
+            <a><button>退会</button></a>
+        <?php endif; ?>
+        
+
     </header>
 
 

@@ -85,7 +85,7 @@ class MemberLogic {
     }
 
     /**
-     * 
+     * ログイン
      * @param string $email, $password
      * @return array|bool $member
      * 

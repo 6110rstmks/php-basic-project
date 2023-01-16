@@ -13,10 +13,11 @@ class ThreadLogic {
         $this->pdo = $pdo;
     }
 
-    public function setMember(Member $member)
-    {
-        $this->member = $member;
-    }
+    // ボツ
+    // public function setMember(Member $member)
+    // {
+    //     $this->member = $member;
+    // }
 
     /**
      * 
@@ -143,4 +144,6 @@ class ThreadLogic {
 
         return false;
     }
+
+
 }

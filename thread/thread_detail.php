@@ -7,11 +7,13 @@ require_once(__DIR__ . '/../config.php');
 use App\MemberLogic;
 use App\ThreadLogic;
 use App\Database;
+use App\CommentLogic;
 
 $pdo = Database::getInstance();
 
 $threadLogic = new ThreadLogic($pdo);
 $memberLogic = new MemberLogic($pdo);
+$commentLogic = new CommentLogic($pdo);
 
 /**
  * 
@@ -26,10 +28,11 @@ if (!$thread)
     exit('スレッドが存在しない');
 }
 
-// ログインしているメンバのID
+// ログインしているメンバのIDを取得
 if (isset($_SESSION['login_member']))
 {
     $member_id = $_SESSION['login_member']['id'];
+    // $member_id = $_SESSION['login_member']->id;
 }
 
 // スレッドに紐づいたメンバの情報を取得
@@ -43,12 +46,59 @@ $memberLinkedThread = $memberLogic->getMemberById($thread['member_id']);
 $auth_flg = MemberLogic::checkAuthenticated(true);
 
 /**
- * 前ページがあるかどうか
+ * スレッドの前、次ページがあるかどうか
  * @var bool
  */
 $prevThreadFlag = $threadLogic->prevThreadCheck($thread_num);
 $nextThreadFlag = $threadLogic->nextThreadCheck($thread_num);
 
+/**
+ * コメントの前、次ページがあるかどうか
+ * @var bool
+ */
+
+//  $prevCommentFlg = $commentLogic->prevCommentCheck($)
+
+/**
+ * 総コメント数を取得
+ * @var int
+ */
+$comment_ttl = $commentLogic->getCommentCountLinkedWithThread($thread_num);
+
+
+/**
+ * １ページャーに表示される、一番上のコメントのidからマイナス１した値
+ */
+// if (!isset($_SESSION['comment_offset']))
+// {
+//     $offset = 1;
+//     $comment_pager = 1;
+
+// } else {
+
+//     $offset = $_SESSION['comment_offset'];
+// }
+
+// $offset = ($offset - 1) * 3;
+
+// $_SESSION['comment_offset'] = $offset;
+  
+if (isset($POST['comment_pager']))
+{
+    $comment_pager = $_POST['comment_pager'];
+} else {
+    $comment_pager = 1;
+}
+
+$offset = ($comment_pager - 1) * 3;
+
+
+/**
+ * 現在のスレッドページのidをレコードにもつに関連するコメントをoffset分取得取得
+ * @var array
+ */
+$comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
+// $comments = $commentLogic->getCommentsLinkedWithThread($thread_num);
 
 ?>
 
@@ -64,6 +114,7 @@ $nextThreadFlag = $threadLogic->nextThreadCheck($thread_num);
     <a href="<?= threadListPage ?>"><button>スレッド一覧に戻る</button></a>
 
     <h2><?= $thread['title'] ?></h2>  
+    <p><?= $comment_ttl ?>コメント</p>
     <?= $thread['created_at'] ?>
 
     <div style="height: 20px; width: auto; background-color: gray;">
@@ -91,12 +142,31 @@ $nextThreadFlag = $threadLogic->nextThreadCheck($thread_num);
     <?php endif; ?>
     <span><?= $thread['created_at'] ?></span>
 
+    <!-- コメント表示部分 -->
+    <?php if (isset($comments)):?>
+        <?php foreach($comments as $comment): ?>
+            <p><?= $comment['comment'] ?></p>
+        <?php endforeach; ?>
+    <?php endif; ?>
 
 
     <?php if ($auth_flg): ?>
-        <form action="">
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+        <form action="<?= dir5 . commentSave ?>" method="POST">
+
+            <textarea name="comment" id="" cols="30" rows="10"></textarea>
+            <input type="hidden" name="thread_id" value="<?= $thread_num?>">
+            <input type="hidden" name="">
+            <button>コメントする</button>
         </form>
     <?php endif;?>
+
+
+
+    <div style="height: 20px; width: auto; background-color: gray;">
+        <form action="" class="my_form" method="POST">
+            <a href="" onclick="document.getElementById('my_form').submit();">次へ</a>
+            <input type="hidden" name="comment_pager" value="<?= $comment_pager ?>">
+        </form>
+    </div>
 </body>
 </html>

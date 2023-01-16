@@ -36,6 +36,8 @@ define("dir2", "Register/");
 define("dir3", "Auth/");
 define("dir4", "thread/");
 
+define("dir5", "comment/");
+
 define("MemberLogic","MemberLogic.php");
 define("ThreadLogic","ThreadLogic.php");
 
@@ -69,6 +71,10 @@ define("threadRegisterFormPage", "thread_regist.php");
 
 define("threadRegisterConfirmPage", "thread_confirm_blade.php");
 
-define("threadCreate", "thread_create.php")
+define("threadCreate", "thread_create.php");
+
+define("threadDetail", "thread_detail.php");
+
+define("commentSave", "comment_save.php");
 
 ?>
