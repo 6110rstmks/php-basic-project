@@ -49,9 +49,6 @@ if (isset($_POST['word']))
         <?php endforeach; ?>
     <?php endif;?>
 
-
-
-
     <button><a href="../<?= topPage ?>">トップに戻る</a></button>
 </body>
 </html>

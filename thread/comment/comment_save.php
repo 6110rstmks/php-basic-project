@@ -16,6 +16,7 @@ if (isset($_SESSION['login_member']))
     // $member_id = $_SESSION['login_member']->id;
 }
 
+
 $comment = filter_input(INPUT_POST, "comment");
 $thread_id = filter_input(INPUT_POST, "thread_id");
 

@@ -53,11 +53,11 @@ $prevThreadFlag = $threadLogic->prevThreadCheck($thread_num);
 $nextThreadFlag = $threadLogic->nextThreadCheck($thread_num);
 
 /**
- * コメントの前、次ページがあるかどうか
+ * 前、次のコメントのページャー（5つ）のグループがあるかどうか
  * @var bool
  */
 
-//  $prevCommentFlg = $commentLogic->prevCommentCheck($)
+// $prevCommentFlg = $commentLogic->prevCommentCheck($)
 
 /**
  * 総コメント数を取得
@@ -65,40 +65,31 @@ $nextThreadFlag = $threadLogic->nextThreadCheck($thread_num);
  */
 $comment_ttl = $commentLogic->getCommentCountLinkedWithThread($thread_num);
 
+// コメントのページャーの数
+$comment_pager_ttl = ($comment_ttl % 5) + 1;
 
-/**
- * １ページャーに表示される、一番上のコメントのidからマイナス１した値
- */
-// if (!isset($_SESSION['comment_offset']))
-// {
-//     $offset = 1;
-//     $comment_pager = 1;
-
-// } else {
-
-//     $offset = $_SESSION['comment_offset'];
-// }
-
-// $offset = ($offset - 1) * 3;
-
-// $_SESSION['comment_offset'] = $offset;
   
-if (isset($POST['comment_pager']))
+/**
+ * 
+ */
+if (isset($_POST['comment_pager']))
 {
-    $comment_pager = $_POST['comment_pager'];
+    $now_comment_pager = (int) $_POST['comment_pager'];
 } else {
-    $comment_pager = 1;
+    $now_comment_pager = 1;
 }
 
-$offset = ($comment_pager - 1) * 3;
+$prev_comment_pager = $now_comment_pager == 1 ? null : max($now_comment_pager - 1, 1); 
+$next_comment_pager = $now_comment_pager == $comment_pager_ttl ? null : min($now_comment_pager + 1, $comment_ttl); 
+
+$offset = ($now_comment_pager - 1) * 5;
 
 
 /**
- * 現在のスレッドページのidをレコードにもつに関連するコメントをoffset分取得取得
+ * 現在のスレッドページのidをレコードにもつに関連するコメントをoffsetの数分（かずぶん）、しゅとく
  * @var array
  */
 $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
-// $comments = $commentLogic->getCommentsLinkedWithThread($thread_num);
 
 ?>
 
@@ -118,55 +109,93 @@ $comments = $commentLogic->getCommentsLinkedWithThread($thread_num, $offset);
     <?= $thread['created_at'] ?>
 
     <div style="height: 20px; width: auto; background-color: gray;">
-        <?php 
-            if ($prevThreadFlag)
-            {
-                echo '<a style="color: #0066CC;" href="thread_detail.php?id=' . $thread_num - 1 . '">前へ</a>';
-            } else {
-                echo '<a style="color: #707070l;">前へ</a>';
-            }
+        <?php if ($prevThreadFlag): ?>
+            <a style="color: #0066CC;" href="thread_detail.php?id=' . $thread_num - 1 . '">前へ</a>
+        <?php else: ?>   
+            <a style="color: #707070l;">前へ</a>
+        <?php endif; ?>
 
-            if ($nextThreadFlag)
-            {
-                echo '<a style="margin-left: 260px; color: #0066CC;" href="thread_detail.php?id=' . $thread_num + 1 . '">次へ</a>';
-            } else {
-                echo '<a style="margin-left: 260px; background-color: #707070l;">次へ</a>';
-            }
-
-        ?>
+        <?php if ($prevThreadFlag): ?>
+            <a style="margin-left: 260px; color: #0066CC;" href="thread_detail.php?id=' . $thread_num + 1 . '">次へ</a>
+        <?php else: ?>   
+            <a style="margin-left: 260px; background-color: #707070l;">次へ</a>
+        <?php endif; ?>
     </div>
 
-    <span>投稿者:</span>
-    <?php if (isset($memberLinkedThread)): ?>
-        <span><?= $memberLinkedThread->name_sei . $memberLinkedThread->name_mei ?></>
-    <?php endif; ?>
-    <span><?= $thread['created_at'] ?></span>
+    <div style="margin-top: 20px; border: 1px blue solid; color: blue;">
+        <div>
+            <span>投稿者:</span>
+            <?php if (isset($memberLinkedThread)): ?>
+                <span><?= $memberLinkedThread->name_sei . $memberLinkedThread->name_mei ?></>
+            <?php endif; ?>
+            <span><?= $thread['created_at'] ?></span>
+        </div>
+    
+        <div><?= $thread['content']?></div>
+    </div>
 
-    <!-- コメント表示部分 -->
-    <?php if (isset($comments)):?>
-        <?php foreach($comments as $comment): ?>
-            <p><?= $comment['comment'] ?></p>
-        <?php endforeach; ?>
-    <?php endif; ?>
+    <div>
+        <!-- コメント表示部分 -->
+        <?php if (isset($comments)):?>
+            <?php foreach($comments as $comment): ?>
+                <div>
+                    <span><?= $comment['id'] ?></span>
+                    <span><?= $comment['comment'] ?></span>
+                    <hr>
+                </div>
+    
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
 
+    <!-- コメントのページャー -->
+    <div style="height: 20px; width: auto; background-color: gray;">
+        <!-- ＜前へ＞ -->
+        <form action="" style="display: inline;" class="comment-pager-form1" method="POST">
+            <?php if (is_null($prev_comment_pager)): ?>
+                <span>前へ</span>
+            <?php else:?>
+                <a class="prev-button" style="cursor: pointer">前へ</a>
+            <?php endif;?>
 
+            <input type="hidden" name="comment_pager" value="<?= $prev_comment_pager ?>">
+        </form>
+
+        <!-- ＜後へ＞ -->
+        <form action="" style="display: inline; margin-left: 50px;" class="comment-pager-form2" method="POST">
+            <?php if (is_null($next_comment_pager)): ?>
+                <span>次へ</span>
+            <?php else:?>
+                <a class="prev-button" style="cursor: pointer">次へ</a>
+            <?php endif;?>
+
+            <input type="hidden" name="comment_pager" value="<?= $next_comment_pager ?>">
+        </form>
+    </div>
+
+    <!-- コメントボックス -->
     <?php if ($auth_flg): ?>
         <form action="<?= dir5 . commentSave ?>" method="POST">
 
             <textarea name="comment" id="" cols="30" rows="10"></textarea>
             <input type="hidden" name="thread_id" value="<?= $thread_num?>">
-            <input type="hidden" name="">
             <button>コメントする</button>
         </form>
     <?php endif;?>
 
+    <script>
+        // ページャー用のjs
+        const comment_pager_form = document.querySelector('.comment-pager-form')
+        const prev_button = document.querySelector('.prev-button')
+        const next_button = document.querySelector('.next-button')
 
+        prev_button.addEventListener('click', () => {
+            prev_button.parentElement.submit();
+        })
 
-    <div style="height: 20px; width: auto; background-color: gray;">
-        <form action="" class="my_form" method="POST">
-            <a href="" onclick="document.getElementById('my_form').submit();">次へ</a>
-            <input type="hidden" name="comment_pager" value="<?= $comment_pager ?>">
-        </form>
-    </div>
+        next_button.addEventListener('click', () => {
+            next_button.parentElement.submit();
+        })
+    </script>
 </body>
 </html>

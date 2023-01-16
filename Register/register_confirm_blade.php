@@ -36,6 +36,14 @@ $password_cnf = filter_input(INPUT_POST, "password_cnf");
 
 $email = filter_input(INPUT_POST, "email");
 
+// 戻るボタンを押したとき用のボタン処理
+$_SESSION['last_name'] = $last_name;
+$_SESSION['first_name'] = $first_name;
+$_SESSION['sex'] = $sex;
+$_SESSION['prefecture'] = $prefecture;
+$_SESSION['other_address'] = $other_address;
+$_SESSION['email'] = $email;
+
 $err = [];
 
 
@@ -207,14 +215,7 @@ if ($hasEmail != false)
 
 if (count($err) > 0)
 {
-
-    $_SESSION = $err;
-    $_SESSION['last_name'] = $last_name;
-    $_SESSION['first_name'] = $first_name;
-    $_SESSION['sex'] = $sex;
-    $_SESSION['prefecture'] = $prefecture;
-    $_SESSION['other_address'] = $other_address;
-    $_SESSION['email'] = $email;
+    $_SESSION['err'] = $err;
     header('Location: '. memberRegisterFormPage);
     exit();
 }

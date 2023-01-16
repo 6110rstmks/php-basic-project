@@ -14,7 +14,10 @@ $prefecture = FormValueRetention('prefecture');
 $other_address = FormValueRetention('other_address');
 $email = FormValueRetention('email');
 
-$session_msgs = $_SESSION;
+if (isset($_SESSION['err']))
+{
+    $session_msgs = $_SESSION['err'];
+}
 $_SESSION = array();
 
 ?>
@@ -37,7 +40,8 @@ $_SESSION = array();
             <input type="text" name="first_name" value="<?php if(isset($first_name) ){ echo $first_name; } ?>">
         </p>
 
-        <?php if(!array_key_exists('csrf_token', $session_msgs)): ?>
+        <?php /*if(!array_key_exists('csrf_token', $session_msgs)): */?>
+        <?php if(isset($session_msgs)): ?>
             <?php foreach($session_msgs as $msg): ?>
                 <p style="color: red;"><?= $msg ?></p>
             <?php endforeach; ?>

@@ -18,6 +18,12 @@ class CommentLogic {
      */
     public function createComment($memberId, $threadId, $comment)
     {
+
+        $timeArray = getdate(time());
+
+        
+
+
         $sql = 'INSERT INTO comments (member_id, thread_id, comment, created_at) VALUES (:member_id, :thread_id, :comment, now())';
 
         $arr = [];
@@ -39,12 +45,12 @@ class CommentLogic {
      */
     public function getCommentCountLinkedWithThread($thread_id)
     {
-        $sql = "SELECT count(*) FROM comments WHERE thread_id = :id";
+        $sql = 'SELECT count(*) FROM comments WHERE thread_id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $thread_id);
         $stmt->execute();
 
-        $cnt = $stmt->rowCount();
+        $cnt = $stmt->fetchColumn();
 
         return $cnt;
     }
