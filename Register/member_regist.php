@@ -132,6 +132,10 @@ $_SESSION = array();
             <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
         </p>
 
+        <?php if (isset($_SESSION['path'])): ?>
+            <?= $_SESSION['path'] ?>
+        <?php endif; ?>
+
         <button>確認画面へ</button>
         <button><a href="../<?= topPage ?>">トップに戻る</a></button>
     </form>

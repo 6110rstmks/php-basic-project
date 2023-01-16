@@ -16,6 +16,8 @@ spl_autoload_register(function ($class) {
 
     $class = trim($class, "App\\");
 
+    // windowsかunixかにより絶対パスの指定方法が異なるのでローカルをwindowsで本番をlinuxに
+    // すると本番障害がおきる。
     if (PHP_OS == 'WINNT')
     {
         $windows_fileName = sprintf(__DIR__ . '\App\%s.php', $class);
@@ -29,8 +31,19 @@ spl_autoload_register(function ($class) {
             exit;
         }
     } else {
-        
+
         $unix_fileName = sprintf(__DIR__ . '/App/%s.php', $class);
+
+        $_SESSION['path'] = $unix_fileName;
+
+        if (file_exists($unix_fileName))
+        {
+            require($unix_fileName);
+    
+        } else {
+            echo 'File not found' . $unix_fileName;
+            exit;
+        }
     }
     
 
