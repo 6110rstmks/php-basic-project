@@ -13,20 +13,29 @@ define('DB_PASS', '119089');
 //---------------------------
 
 spl_autoload_register(function ($class) {
-    
-    // if (strpos($class, $prefix) === 0)
-    // {
-    $fileName = sprintf(__DIR__ . '\%s.php', $class);
-    // }
 
-    if (file_exists($fileName))
+    $class = trim($class, "App\\");
+
+    if (PHP_OS == 'WINNT')
     {
-        require($fileName);
+        $windows_fileName = sprintf(__DIR__ . '\App\%s.php', $class);
 
+        if (file_exists($windows_fileName))
+        {
+            require($windows_fileName);
+    
+        } else {
+            echo 'File not found' . $windows_fileName;
+            exit;
+        }
     } else {
-        echo 'File not found' . $fileName;
-        exit;
+        
+        $unix_fileName = sprintf(__DIR__ . '/App/%s.php', $class);
     }
+    
+
+
+
 
 });
 
