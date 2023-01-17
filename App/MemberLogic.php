@@ -49,6 +49,11 @@ class MemberLogic {
         return $member;
     }
 
+    /**
+     * 
+     * @param array $memberData
+     * 
+     */
     public function createMember(array $memberData)
     {
         // $result = false; 

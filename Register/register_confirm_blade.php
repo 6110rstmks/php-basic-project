@@ -12,8 +12,8 @@ use App\Token;
 // & 二重登録防止
 Token::validate();
 
+// ワンタイムトークンのため中身を削除
 $_SESSION['csrf_token'] = '';
-
 
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo); 
@@ -59,9 +59,16 @@ $err = [];
 
 // ---last_name---（完）
 
+// 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
+
+if (empty($last_name))
+{
+    $err['last_name_required'] = '氏名（姓）は必須入力です。';
+}
+
 // ２１文字以上入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (mb_strlen($last_name) >= 21) {
+elseif (mb_strlen($last_name) >= 21) {
     // 確認画面にリダイレクトする
     $err['last_name_count'] = '氏名（姓）の入力は20文字以下である必要があります';
 }
@@ -73,27 +80,20 @@ if (mb_strlen($last_name) >= 21) {
 //     $err['last_name_zenkaku'] = '氏名（姓）は全角文字を入力してください';
 // }
 
-// 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
-
-if (!isset($last_name))
-{
-    $err['last_name_required'] = '氏名（姓）は必須入力です。';
-}
 
 // ---first_name（完）
 
-// ２１文字以上入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
-
-if (mb_strlen($first_name) >= 21) {
-    // 確認画面にリダイレクトする
-    $err['first_name_count'] = '氏名（名）の入力は20文字以下である必要があります';
-}
-
 //空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (!isset($first_name))
+if (empty($first_name))
 {
     $err['first_name_required'] = '氏名（名）は必須入力です。';
+}
+
+// ２１文字以上入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
+elseif (mb_strlen($first_name) >= 21) {
+    // 確認画面にリダイレクトする
+    $err['first_name_count'] = '氏名（名）の入力は20文字以下である必要があります';
 }
 
 // 「"7;d"''2;"」などの記号の文字列を入力してもエラーにならないか
@@ -103,12 +103,6 @@ if (!isset($first_name))
 //     $err['first_name_zenkaku'] = '氏名（名）の全角文字を入力してください';
 // }
 
-//空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
-
-if (!isset($first_name))
-{
-    $err['last_name_required'] = '氏名（姓）は必須入力です。';
-}
 
 
 // ---sex（完）
@@ -132,15 +126,15 @@ if (!($sex == 0 || $sex == 1))
 // ４７都道府県以外の値をvalue値に入れて「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
 if (!in_array($prefecture, $prefectures_array)) {
-    $err['prefecture_required'] = '都道府県を正しく選択してください。';
+    $err['prefecture_required'] = '都道府県を選択してください。';
 }
 
 // 選択なしで「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (!isset($prefecture))
-{
-    $err['prefecture_required'] = '都道府県を選択してください';
-}
+// if (!isset($prefecture))
+// {
+//     $err['prefecture_required'] = '都道府県を選択してください';
+// }
 
 // --住所（それ以外の住所）
 // 未入力でも遷移可能
@@ -155,24 +149,24 @@ if (mb_strlen($other_address) >= 101)
 
 // ---password（完）
 
+// 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
+
+// if (!isset($password))
+if (empty($password))
+{
+    $err['password_required'] = 'パスワードは必須入力です。';
+}
+// 8～20文字の文字入力数でない場合に「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
+elseif (strlen($password) < 8 || strlen($password) > 20)
+{
+    $err['password_string_limit'] = 'パスワードの文字数は8文字以上20文字以下でお願いします。';
+}
+
 // 半角英数字以外の文字を入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
 if (mb_strlen($password) != mb_strwidth($password))
 {
     $err['password_hankaku'] = 'パスワードは半角英数字でお願いします';
-}
-
-// 8～20文字の文字入力数でない場合に「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
-if (strlen($password) < 8 || strlen($password) > 20)
-{
-    $err['password_string_limit'] = 'パスワードの文字数は8文字以上20文字以下でお願いします。';
-}
-
-// 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
-
-if (!isset($password))
-{
-    $err['password_required'] = 'パスワードは必須入力です。';
 }
 
 // ---password_cnf
@@ -182,19 +176,19 @@ if (!isset($password))
 
 if (mb_strlen($password_cnf) != mb_strwidth($password_cnf))
 {
-    $err['password_cnf_hankaku'] = 'パスワードは半角英数字でお願いします';
+    $err['password_cnf_hankaku'] = 'パスワード確認の項目は半角英数字でお願いします';
 }
 
 // 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (!isset($password_cnf))
+if (empty($password_cnf))
 {
-    $err['password_required'] = 'パスワードは必須入力です。';
+    $err['password_cnf_required'] = 'パスワード確認の項目は必須入力です。';
 }
 
 // 8～20文字の文字入力数でない場合に「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (strlen($password_cnf) < 8 || strlen($password_cnf) > 20)
+elseif (strlen($password_cnf) < 8 || strlen($password_cnf) > 20)
 {
     $err['password_cnf_string_limit'] = 'パスワード確認の文字数は8文字以上20文字以下でお願いします。';
 }
@@ -207,6 +201,11 @@ if ($password != $password_cnf)
 }
 
 // --- email メールアドレス以外のテキストを入力し遷移するとエラーが表示されるか
+
+if (empty($email))
+{
+    $err['email_required'] = 'emailを入力してください';
+}
 
 // ２０１文字以上入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 if (strlen($email) >= 201)
@@ -257,7 +256,7 @@ if (count($err) > 0)
     <div><?= $sex_display ?></div>
 
     <div>住所</div>
-    <div><?= $prefecture ?></div>
+    <div><?= $prefecture . $other_address ?></div>
 
     <div>パスワード</div>
     <div>セキュリティのため非表示</div>
@@ -271,12 +270,12 @@ if (count($err) > 0)
         <input type="hidden" name="first_name" value="<?= $first_name ?>">
         <input type="hidden" name="sex" value="<?= $sex ?>">
         <input type="hidden" name="prefecture" value="<?= $prefecture ?>">
+        <input type="hidden" name="other_address" value="<?= $other_address ?>">
         <input type="hidden" name="password" value="<?= $password ?>">
         <input type="hidden" name="email" value="<?= $email ?>">
 
         <!--  二重送信対策-->
         <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
-
 
         <button>完了画面</button>
     </form>

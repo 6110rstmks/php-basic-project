@@ -37,5 +37,7 @@ unset($_SESSION['email']);
 <body>
 <h1>会員登録完了</h1>
 <h2>会員登録が完了しました。</h2>
+
+<a href="../<?= topPage?>">トップに戻る</a>
 </body>
 </html>
