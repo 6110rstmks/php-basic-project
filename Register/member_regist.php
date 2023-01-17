@@ -49,9 +49,9 @@ $_SESSION = array();
 
         <p>
             <span>性別</span>
-            <input type="radio" name="sex" value="男性" <?php if (isset($sex) && $sex == "男性") { echo "checked";} ?>>
+            <input type="radio" name="sex" value="0" <?php if (isset($sex) && $sex == "0") { echo "checked";} ?>>
             <label for="">男性</label>
-            <input type="radio" name="sex" value="女性" <?php if (isset($sex) && $sex == "女性") { echo 'checked';} ?>>
+            <input type="radio" name="sex" value="1" <?php if (isset($sex) && $sex == "1") { echo 'checked';} ?>>
             <label for="">女性</label>
         </p>
 

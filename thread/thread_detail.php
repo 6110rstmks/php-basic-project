@@ -8,6 +8,7 @@ use App\MemberLogic;
 use App\ThreadLogic;
 use App\Database;
 use App\CommentLogic;
+use App\LikeLogic;
 
 $pdo = Database::getInstance();
 
@@ -148,6 +149,7 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
         <?php endif; ?>
     </div>
 
+    <!-- スレッドの投稿者、投稿日時、内容 -->
     <div style="margin-top: 20px; border: 1px blue solid; color: blue;">
         <div>
             <span>投稿者:</span>

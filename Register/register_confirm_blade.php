@@ -18,8 +18,6 @@ $_SESSION['csrf_token'] = '';
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo); 
 
-
-
 $prefectures_array = array('北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県', '三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県', '鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県');
 
 $first_name = filter_input(INPUT_POST, "first_name");
@@ -44,6 +42,18 @@ $_SESSION['prefecture'] = $prefecture;
 $_SESSION['other_address'] = $other_address;
 $_SESSION['email'] = $email;
 
+// 性別をintから男性、女性へ（確認画面において表示するために）
+if (isset($sex))
+{
+    if ($sex == 0)
+    {
+        $sex_display = '男性';
+    } elseif ($sex == 1)
+    {
+        $sex_display = '女性';
+    }
+}
+
 $err = [];
 
 
@@ -51,17 +61,17 @@ $err = [];
 
 // ２１文字以上入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (strlen($last_name) >= 21) {
+if (mb_strlen($last_name) >= 21) {
     // 確認画面にリダイレクトする
-    $err['last_name_count'] = '入力は 21 文字以下である必要があります';
+    $err['last_name_count'] = '氏名（姓）の入力は20文字以下である必要があります';
 }
 
 // 「"7;d"''2;"」などの記号の文字列を入力してもエラーにならないか
 
-if (mb_strlen($last_name) == mb_strwidth($last_name) || preg_match('(;|[a-z])', $last_name) === 1)
-{
-    $err['last_name_zenkaku'] = '全角文字を入力してください';
-}
+// if (mb_strlen($last_name) == mb_strwidth($last_name) || preg_match('(;|[a-z])', $last_name) === 1)
+// {
+//     $err['last_name_zenkaku'] = '氏名（姓）は全角文字を入力してください';
+// }
 
 // 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
@@ -72,6 +82,13 @@ if (!isset($last_name))
 
 // ---first_name（完）
 
+// ２１文字以上入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
+
+if (mb_strlen($first_name) >= 21) {
+    // 確認画面にリダイレクトする
+    $err['first_name_count'] = '氏名（名）の入力は20文字以下である必要があります';
+}
+
 //空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
 if (!isset($first_name))
@@ -81,10 +98,10 @@ if (!isset($first_name))
 
 // 「"7;d"''2;"」などの記号の文字列を入力してもエラーにならないか
 
-if (mb_strlen($first_name) == mb_strwidth($first_name) || preg_match('(;|[a-z])', $first_name) === 1)
-{
-    $err['first_name_zenkaku'] = '全角文字を入力してください';
-}
+// if (mb_strlen($first_name) == mb_strwidth($first_name) || preg_match('(;|[a-z])', $first_name) === 1)
+// {
+//     $err['first_name_zenkaku'] = '氏名（名）の全角文字を入力してください';
+// }
 
 //空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
@@ -105,7 +122,7 @@ if (!isset($sex))
 
 // 男性・女性以外の値をvalue値に入れて「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (!($sex == "男性" || $sex == "女性"))
+if (!($sex == 0 || $sex == 1))
 {
     $err['sex_validation'] = "性別は男性もしくは女性を選択してください";
 }
@@ -130,9 +147,9 @@ if (!isset($prefecture))
 
 // １０１文字以上入力し「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (strlen($other_address) >= 101)
+if (mb_strlen($other_address) >= 101)
 {
-    $err['other_address_string_limit'] = '100文字以内に収めてください';
+    $err['other_address_string_limit'] = 'その他の住所は100文字以内に収めてください';
 }
 
 
@@ -237,7 +254,7 @@ if (count($err) > 0)
     <span style="display: inline"><?php echo $first_name; ?></span>
 
     <div>性別</div>
-    <div><?= $sex ?></div>
+    <div><?= $sex_display ?></div>
 
     <div>住所</div>
     <div><?= $prefecture ?></div>
