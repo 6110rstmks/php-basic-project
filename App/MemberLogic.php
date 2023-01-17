@@ -65,7 +65,7 @@ class MemberLogic {
         $arr[] = $memberData['first_name'];
         $arr[] = $memberData['sex'];
         $arr[] = $memberData['prefecture'];
-        $arr[] = isset($_Post['other_address']) ? $memberData['other_address'] : null;
+        $arr[] = isset($memberData['other_address']) ? $memberData['other_address'] : null;
         $arr[] = $memberData['password'];
         $arr[] = $memberData['email'];
 
