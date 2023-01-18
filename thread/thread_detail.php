@@ -66,25 +66,24 @@ $auth_flg = MemberLogic::checkAuthenticated(true);
 $prevThreadFlag = $threadLogic->prevThreadCheck($thread_num);
 $nextThreadFlag = $threadLogic->nextThreadCheck($thread_num);
 
-/**
- * 前、次のコメントのページャー（5つ）のグループがあるかどうか
- * @var bool
- */
-
-// $prevCommentFlg = $commentLogic->prevCommentCheck($)
 
 /**
- * 総コメント数を取得
+ * あるスレッド一つに紐づく総コメント数を取得
  * @var int
  */
 $comment_ttl = $commentLogic->getCommentCountLinkedWithThread($thread_num);
 
-// コメントのページャーの数
+
+/**
+ * コメントのページャーの数を算出
+ * @var int
+ */
 $comment_pager_ttl = ($comment_ttl % 5) + 1;
 
   
 /**
- * 
+ * $now_comment_pager @var int
+ * コメントにおける現在のページャーを表す。
  */
 if (isset($_POST['comment_pager']))
 {
@@ -94,11 +93,10 @@ if (isset($_POST['comment_pager']))
 }
 
 // ＜前へ＞のリンクにいれるためのページナンバー
-$prev_comment_pager = $now_comment_pager == 1 ? null : max($now_comment_pager - 1, 1); 
-$next_comment_pager = $now_comment_pager == $comment_pager_ttl ? null : min($now_comment_pager + 1, $comment_ttl); 
+$prev_comment_pager = $now_comment_pager === 1 ? null : max($now_comment_pager - 1, 1); 
+$next_comment_pager = $now_comment_pager === $comment_pager_ttl || $comment_pager_ttl == 1 ? null : min($now_comment_pager + 1, $comment_ttl); 
 
 $offset = ($now_comment_pager - 1) * 5;
-
 
 /**
  * 現在のスレッドページのidをレコードにもつに関連するコメントをoffsetの数分（かずぶん）、しゅとく
@@ -186,7 +184,7 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
                     $comment_time = $comment_year . '.' . $comment_month . '.' . $comment_day . '.' . $comment_hour . ':' . $comment_minute;
                 ?>
                 <div>
-                    <span><?= $comment['id'] ?></span>
+                    <span><?= $comment['id'] ?>.</span>
                     <span><?= $comment['comment'] ?></span>
                     <span><?= $comment_time ?></span>
                     <hr>
@@ -211,6 +209,7 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
 
         <!-- ＜後へ＞ -->
         <form action="" style="display: inline; margin-left: 50px;" class="comment-pager-form2" method="POST">
+            <!-- 次のコメントのページャーがあるかどうか -->
             <?php if (is_null($next_comment_pager)): ?>
                 <span style="font-size: 12px">次へ</span>
             <?php else:?>
