@@ -41,10 +41,20 @@ if (isset($_POST['word']))
 
     <?php if (isset($threads)): ?>
         <?php foreach($threads as $thread): ?>
+            <?php
+                $thread_year = substr($thread['created_at'], 0, 4);
+                $thread_month = substr($thread['created_at'], 5, 2);
+                $thread_day = substr($thread['created_at'], 8, 2);
+                $thread_hour = substr($thread['created_at'], 11, 2);
+                $thread_minute = substr($thread['created_at'], 14, 2);
+
+                $thread_time = $thread_year . '.' . $thread_month . '.' . $thread_day . '.' . $thread_hour . ':' . $thread_minute;
+
+            ?>
             <div>
-                <span>ID</span><?= $thread['id']?>
+                <span>ID:</span><?= $thread['id']?>
                 <a href="thread_detail.php?id=<?= $thread['id'] ?>"><?= $thread['title'] ?></a>
-                <span><?= $thread['created_at']?></span>
+                <span><?= $thread_time ?></span>
             </div>
         <?php endforeach; ?>
     <?php endif;?>

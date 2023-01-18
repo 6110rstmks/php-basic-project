@@ -16,7 +16,6 @@ $login_flg = MemberLogic::checkAuthenticated(true);
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,34 +29,35 @@ $login_flg = MemberLogic::checkAuthenticated(true);
         <?php if ($login_flg): ?>
 
             <span>ようこそ、<?= $member_info['name_sei'] . $member_info['name_mei'] ?>さん</span>
+            <a href="<?= dir4 . threadListPage ?>"><button>スレッド一覧</button></a>
 
-            <button><a href="<?= dir4 . threadRegisterFormPage?>">新規スレッド作成</a></button>
+            <a href="<?= dir4 . threadRegisterFormPage?>"><button>新規スレッド作成</button></a>
 
-            <!-- <form action="./logout.php" method="POST"> -->
-            <form action="<?= dir3 . logout ?>" method="POST">
+            <form style="display: inline" action="<?= dir3 . logout ?>" method="POST">
                 <button>ログアウト</button>
                 <input type="hidden" name="logout" value="logout">
             </form>
 
         <?php else: ?>
-
-            <!-- <a href="./member_regist.php"><button>新規登録</button></a> -->
-            <a href="<?= dir2 . memberRegisterFormPage ?>"><button>新規登録</button></a>
+            <a href="<?= dir4 . threadListPage ?>"><button>スレッド一覧</button></a>
+            <a href="<?= dir2 . memberRegisterFormPage ?>"><button>新規会員登録</button></a>
             <a href="<?= dir3 . loginPage ?>"><button>ログイン</button></a>
 
         <?php endif ; ?>
 
-        <?php if ($login_flg): ?>
-            <a><button>退会</button></a>
-        <?php endif; ?>
+
         
 
     </header>
 
-
     <section>
         <p>keiziban</p>
+
+        <?php if ($login_flg): ?>
+            <a style="display: block; margin-top: 100px"><button>退会</button></a>
+        <?php endif; ?>
     </section>
+
 
     
 </body>

@@ -156,7 +156,16 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
             <?php if (isset($memberLinkedThread)): ?>
                 <span><?= $memberLinkedThread->name_sei . $memberLinkedThread->name_mei ?></>
             <?php endif; ?>
-            <?= $thread['created_at'] ?>
+            <?php
+                $thread_year = substr($thread['created_at'], 0, 4);
+                $thread_month = substr($thread['created_at'], 5, 2);
+                $thread_day = substr($thread['created_at'], 8, 2);
+                $thread_hour = substr($thread['created_at'], 11, 2);
+                $thread_minute = substr($thread['created_at'], 14, 2);
+
+                $thread_time = $thread_year . '.' . $thread_month . '.' . $thread_day . '       ' . $thread_hour . ':' . $thread_minute;
+            ?>
+            <?= $thread_time ?>
         </div>
     
         <div><?= $thread['content']?></div>
