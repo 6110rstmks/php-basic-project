@@ -92,5 +92,6 @@ $_SESSION['login_member'] = $login_member;
         <button>確認画面へ</button>
     </form>
     <button><a href="../<?= topPage?>">トップへ戻る</a></button>
+    <button><a href="<?= thread_detail ?>">スレッド一覧にもどる</a></button>
 </body>
 </html>

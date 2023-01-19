@@ -68,17 +68,19 @@ class ThreadLogic {
     }
 
     /**
-     * ワードからスレッド検索してthreadのModelを返す
-     * @param str $word
+     * スレッドタイトル、スレッドのコンテンツからスレッド検索してthreadのModelを返す
+     * @param str $word, str $content
      * @return array
      */
-    public function searchThread($word)
+    public function searchThread($word, $content)
     {
-        $pattern = '%' . $word . '%'; 
-        $sql = "SELECT * FROM threads WHERE title LIKE :pattern ORDER BY created_at DESC";
+        $pattern1 = '%' . $word . '%'; 
+        $pattern2 = '%' . $content . '%';
+        $sql = "SELECT * FROM threads WHERE title LIKE :pattern1 or content LIKE :pattern2 ORDER BY created_at DESC";
         $stmt = $this->pdo->prepare($sql);
 
-        $stmt->bindValue(':pattern', $pattern);
+        $stmt->bindValue(':pattern1', $pattern1);
+        $stmt->bindValue(':pattern2', $pattern2);
         $stmt->execute();
 
         $threads = $stmt->fetchAll(\PDO::FETCH_ASSOC);

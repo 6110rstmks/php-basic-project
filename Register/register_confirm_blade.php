@@ -169,6 +169,11 @@ if (mb_strlen($password) != mb_strwidth($password))
     $err['password_hankaku'] = 'パスワードは半角英数字でお願いします';
 }
 
+if (!preg_match('/[A-Za-z0-9]{8,21}/', $password))
+{
+    $err['password_kigoumozi'] = 'パスワードに記号文字は使用できません';
+}
+
 // ---password_cnf
 
 
@@ -198,6 +203,13 @@ elseif (strlen($password_cnf) < 8 || strlen($password_cnf) > 20)
 if ($password != $password_cnf)
 {
     $err['password_match'] = 'パスワードが一致しません';
+}
+
+// 記号の半角文字が入力された場合
+
+if (!preg_match('/[A-Za-z0-9]{8,21}/', $password_cnf))
+{
+    $err['password_cnf_kigoumozi'] = 'パスワード確認に記号文字は使用できません';
 }
 
 // --- email メールアドレス以外のテキストを入力し遷移するとエラーが表示されるか
