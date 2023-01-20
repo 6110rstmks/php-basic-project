@@ -24,6 +24,12 @@ if (strlen($title) >= 101) {
     $_SESSION['thread_title_count'] = 'タイトルの入力は100文字以下である必要があります';
     $err_flg = true;
     
+} 
+
+if (mb_strlen($title) >= 101)
+{
+    $_SESSION['thread_title_count'] = 'タイトルの入力は100文字以下である必要があります';
+    $err_flg = true;
 }
 
 if (empty($title))
@@ -39,7 +45,9 @@ if (strlen($comment) >= 501) {
     // 確認画面にリダイレクトする
     $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
     $err_flg = true;
-    
+} elseif (mb_strlen($comment) >= 501) {
+    $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
+    $err_flg = true;
 }
 
 
@@ -54,6 +62,9 @@ if (empty($comment))
 
 if ($err_flg)
 {
+    $_SESSION['thread_title'] = $title;
+    $_SESSION['thread_comment'] = $comment;
+
     header('Location: '. threadRegisterFormPage);
     exit();
 }

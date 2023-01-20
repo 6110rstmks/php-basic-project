@@ -3,6 +3,8 @@
 session_start();
 
 require_once(__DIR__ . '/../config.php');
+require_once("../function.php");
+
 
 use App\MemberLogic;
 
@@ -11,6 +13,9 @@ use App\MemberLogic;
 // ログインユーザ専用ページのためfalseを指定
 $logic_flg = MemberLogic::checkAuthenticated(false);
 
+// 
+$thread_title = FormValueRetention('thread_title');
+$thread_comment = FormValueRetention('thread_comment');
 
 // ②の中で$_SESSION = array();の処理をするために
 // 変数を退避
@@ -33,6 +38,7 @@ if (isset($_SESSION['title'])
     unset($_SESSION['comment']);
 }
 
+
 // ②エラーメッセージをセッション変数から変数へ格納
 // セッション変数内のエラーメッセージを削除
 if (isset($_SESSION['thread_title_required'])
@@ -43,6 +49,8 @@ if (isset($_SESSION['thread_title_required'])
     $session_err_msgs = (array) $_SESSION;
     $_SESSION = array();
 }
+
+
 
 // 退避した変数を再び格納
 $_SESSION['login_member'] = $login_member;
@@ -69,29 +77,22 @@ $_SESSION['login_member'] = $login_member;
     <form action="<?= threadRegisterConfirmPage ?>" method="POST">
         <?php if (isset($session_err_msgs)): ?>
             <?php foreach($session_err_msgs as $msg): ?>
-                <?= $msg; ?>
+                <span><?= $msg; ?></span>
             <?php endforeach;?>
         <?php endif;?>
 
         <p>
             <label for="">スレッドタイトル</label>
-            <input type="text" name="title" value="<?php if(isset($title) ){ echo $title; } ?>">
+            <input type="text" name="title" value="<?php if(isset($thread_title) ){ echo $thread_title; } ?>">
         </p>
         <p>
             <label for="">コメント</label>
-            <textarea name="comment" cols="30" rows="10">
-                <?php
-                    if(isset($comment))
-                    { 
-                        echo $comment; 
-                    } 
-                ?>
-            </textarea>
+            <textarea name="comment" cols="30" rows="10"><?php if(isset($thread_comment)) { echo $thread_comment; } ?></textarea>
         </p>
 
         <button>確認画面へ</button>
     </form>
     <button><a href="../<?= topPage?>">トップへ戻る</a></button>
-    <button><a href="<?= thread_detail ?>">スレッド一覧にもどる</a></button>
+    <button><a href="<?= threadDetail ?>">スレッド一覧にもどる</a></button>
 </body>
 </html>

@@ -8,6 +8,11 @@ use App\MemberLogic;
 use App\ThreadLogic;
 use App\Database;
 
+$pdo = Database::getInstance();
+
+$threadLogic = new ThreadLogic($pdo);
+
+
 $auth_flg = MemberLogic::checkAuthenticated(true);
 
 // ワードからスレッドを取得する
@@ -15,11 +20,20 @@ if (isset($_POST['word']))
 {
     $word = $_POST['word'];
 
-    $pdo = Database::getInstance();
 
-    $threadLogic = new ThreadLogic($pdo);
+    /**
+     * 検索したワードがタイトルもしくはコメント内にあるスレッド一覧を取得
+     * @var array|null
+     */
     $threads = $threadLogic->searchThread($word);
+
+    
+} else {
+    $threads = $threadLogic->getAllThreads();
 }
+
+
+
 ?>
 
 <!DOCTYPE html>

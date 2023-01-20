@@ -17,13 +17,10 @@ $memberLogic = new MemberLogic($pdo);
 $commentLogic = new CommentLogic($pdo);
 
 /**
- * 
+ * GETリクエストでのスレッド番号
  * @var int
  */
-try {
-    $thread_num = (int) $_GET['id'];
-} catch(\Exception $ex) {
-}
+$thread_num = (int) $_GET['id'];
 
 
 if (!$thread_num)
@@ -31,6 +28,7 @@ if (!$thread_num)
     exit('スレッドが存在しない');
 }
 
+// スレッドidに紐づくスレッドの情報を取得
 $thread = $threadLogic->getThreadById($thread_num);
 
 // ログインしているメンバのIDを取得
@@ -58,6 +56,7 @@ $memberLinkedThread = $memberLogic->getMemberById($thread['member_id']);
  * @var bool
  */
 $auth_flg = MemberLogic::checkAuthenticated(true);
+
 
 /**
  * スレッドの前、次ページがあるかどうか
@@ -185,8 +184,11 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
                 ?>
                 <div>
                     <span><?= $comment['id'] ?>.</span>
-                    <span><?= $comment['comment'] ?></span>
+                    <span><?= $_SESSION['login_member']['name_sei'] . $_SESSION['login_member']['name_mei'] ?></span>
                     <span><?= $comment_time ?></span>
+                    <div>
+                        <span><?= $comment['comment'] ?></span>
+                    </div>
                     <hr>
                 </div>
     

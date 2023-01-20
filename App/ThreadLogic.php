@@ -41,7 +41,7 @@ class ThreadLogic {
     // }
 
     /**
-     * 
+     * create a new thread
      * @param array $threadData, int $member_id
      * 
      */
@@ -67,15 +67,30 @@ class ThreadLogic {
         $stmt->execute();
     }
 
-    /**
-     * スレッドタイトル、スレッドのコンテンツからスレッド検索してthreadのModelを返す
-     * @param str $word, str $content
-     * @return array
-     */
-    public function searchThread($word, $content)
+    public function getAllThreads()
     {
+        $sql = "SELECT * FROM threads order by id DESC";
+        $stmt = $this->pdo->query($sql);
+        $threads = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $threads;
+    }
+
+    /**
+     * $wordの文字を含むスレッドタイトル、スレッドのコンテンツのスレッド検索してthreadのModelを返す
+     * @param str $word
+     * @return array|false
+     */
+    public function searchThread($word)
+    {
+        // テキストボックスに値を入れずに検索をおしたときは何も表示させない。
+        if ($word == '') 
+        {
+            return null;
+        }
+
         $pattern1 = '%' . $word . '%'; 
-        $pattern2 = '%' . $content . '%';
+        $pattern2 = '%' . $word . '%'; 
         $sql = "SELECT * FROM threads WHERE title LIKE :pattern1 or content LIKE :pattern2 ORDER BY created_at DESC";
         $stmt = $this->pdo->prepare($sql);
 
