@@ -12,7 +12,7 @@ use App\Token;
 // ログインしているメンバのIDを取得
 if (isset($_SESSION['login_member']))
 {
-    $member_id = $_SESSION['login_member']['id'];
+    $member_id = $_SESSION['login_member'][0]['id'];
     // $member_id = $_SESSION['login_member']->id;
 }
 
