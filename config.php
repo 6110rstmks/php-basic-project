@@ -1,14 +1,10 @@
 
 <?php
 
-
 define('DSN', 'mysql:host=localhost;dbname=test;charset=utf8mb4');
 
 define('DB_USER', 'root');
 define('DB_PASS', '119089');
-
-// define('DB_USER', 'test');
-// define('DB_PASS', '119089Meisei/');
 
 //---------------------------
 
@@ -55,6 +51,7 @@ define("dir4", "thread/");
 
 define("dir5", "comment/");
 define("dir6", "like/");
+define("dir7", "Admin/");
 
 define("MemberLogic","MemberLogic.php");
 define("ThreadLogic","ThreadLogic.php");
@@ -100,5 +97,15 @@ define("commentSave", "comment_save.php");
 // ----------------------
 
 define("likeToggle", "like_toggle.php");
+
+// ----------------------
+
+define("adminLoginPage", "admin_login_blade.php");
+
+define("adminLoginCheck", "admin_login_check.php");
+
+define("adminTopPage", 'admin_top_blade.php');
+
+define("adminLogout", 'admin_logout.php');
 
 ?>

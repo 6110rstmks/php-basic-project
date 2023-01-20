@@ -92,7 +92,7 @@ class MemberLogic {
     /**
      * ログイン
      * @param string $email, $password
-     * @return array|bool $member
+     * @return array $member
      * 
      */
     public function login($email, $password)
@@ -105,7 +105,6 @@ class MemberLogic {
         $stmt->bindValue(':password', $password);
 
         $stmt->execute();
-        // $member = $stmt->fetchObject();
         $member = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $member;
@@ -140,14 +139,6 @@ class MemberLogic {
         // ログインをしていない場合はnull
         $member_info = isset($_SESSION['login_member']) ? (array) $_SESSION['login_member'] : null;
 
-        /**
-         * @var bool
-         * ログインしているかを表す。
-         * false: ログインしていない
-         * true: ログインしている
-         */
-        // $login_flg = false;
-
         // ログインしているユーザでトップ画面に入った場合
         if (!is_null($member_info))
         {
@@ -158,6 +149,8 @@ class MemberLogic {
         {
             return false;
         }
+
+        // $return_flgがfalseでかつログインしていなければ以下の文を表示
 
         exit("ログインしていない場合はアクセスできません。");
         

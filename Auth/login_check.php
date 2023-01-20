@@ -15,10 +15,15 @@ $pdo = Database::getInstance();
 
 $memberLogic = new MemberLogic($pdo);
 
+/**
+ * 空のarrayがかえって来た場合、ログイン失敗
+ * @var array
+ */
 $member = $memberLogic->login($email, $password); 
 
 // 一致するIdもしくはパスワードがなければ
-if ($member == false)
+// if ($member === false)
+if (empty($member))
 {
 
     $_SESSION['match_err'] = 'IDもしくはパスワードが間違っています';
