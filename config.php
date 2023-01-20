@@ -99,6 +99,6 @@ define("commentSave", "comment_save.php");
 
 // ----------------------
 
-define("likeSave", "like_save.php");
+define("likeToggle", "like_toggle.php");
 
 ?>

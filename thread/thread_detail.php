@@ -205,7 +205,6 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
                         <span><?= $comment['comment'] ?></span>
                     </div>
                     <div>
-
                         <?php
                             // ----いいねに関するロジック
 
@@ -217,10 +216,29 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
 
                         ?>
                         <!-- ハート -->
-                        <form method="POST" action="./<?= threadDetail ?>?id=<?= $thread_num ?>">
-                            <i class="like fa fa-heart"></i>
-                            <span><?= $like_count ?></span>
-                        </form>
+                        <!-- ログインしている場合、likeToggleへ繊維 -->
+                        <?php if ($auth_flg): ?>
+                            <form method="POST" action="<?= dir6 . likeToggle ?>">
+                                <?php if ($like_count === 0): ?>
+                                    <i class="like fa fa-heart"></i>
+
+                                <?php else: ?>
+                                    <i class="like liked fa fa-heart"></i>
+                                <?php endif;?>
+                            <input type="hidden" name="thread_id" value="<?= $thread_num?>">
+                            <input type="hidden" name="comment_id" value="<?= $comment['id']?>">
+                            </form>
+                        <!-- ログインしていない場合、loginPageへ遷移 -->
+                        <?php else: ?>
+                            <form method="GET" action="../<?= dir2 . memberRegisterFormPage ?>">
+                                <?php if ($like_count === 0): ?>
+                                    <i class="like fa fa-heart"></i>
+                                <?php else: ?>
+                                    <i class="like liked fa fa-heart"></i>
+                                <?php endif;?>
+                            </form>
+                        <?php endif;?>
+                        <span><?= $like_count ?></span>
                     </div>
                     <hr>
                 </div>
@@ -277,13 +295,11 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
         likes.forEach(like => {
 
             addEventListener('click', e => {
-                console.log(e.target.parentElement)
+                // いいねをクリックしたらフォームを送信
                 e.target.parentElement.submit()
-                e.target.classList.toggle('liked')
             })
         })
 
-        // いいねをクリックしたらフォームを送信
 
         // const 
 
