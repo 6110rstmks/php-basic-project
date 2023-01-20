@@ -15,6 +15,7 @@ $pdo = Database::getInstance();
 $threadLogic = new ThreadLogic($pdo);
 $memberLogic = new MemberLogic($pdo);
 $commentLogic = new CommentLogic($pdo);
+$likeLogic = new LikeLogic($pdo);
 
 /**
  * GETリクエストでのスレッド番号
@@ -28,19 +29,21 @@ if (!$thread_num)
     exit('スレッドが存在しない');
 }
 
-// スレッドidに紐づくスレッドの情報を取得
+/**
+ * スレッドidに紐づくスレッドの情報を取得
+ * @var array
+ */
 $thread = $threadLogic->getThreadById($thread_num);
 
 // ログインしているメンバのIDを取得
 if (isset($_SESSION['login_member']))
 {
-    $member_id = $_SESSION['login_member']['id'];
+    $member_id = $_SESSION['login_member'][0]['id'];
     // $member_id = $_SESSION['login_member']->id;
 }
 
 // コメントのフォームが空だった場合に受け取ったエラーメッセージを
 // 変数に格納
-
 if (isset($_SESSION['err']))
 {
     $errs = $_SESSION['err'];
@@ -113,6 +116,7 @@ $minute = substr($thread['created_at'], 14, 2);
 
 $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $minute;
 
+
 ?>
 
 <!DOCTYPE html>
@@ -121,9 +125,11 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <title>Document</title>
 </head>
-<body>
+<body style="background-color: #B0E0E6">
     <a href="<?= threadListPage ?>"><button>スレッド一覧に戻る</button></a>
 
     <h2><?= $thread['title'] ?></h2>  
@@ -174,6 +180,15 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
             <?php foreach($comments as $comment): ?>
 
                 <?php
+
+                    // $commentをしたmemberの情報を取得
+                    /**
+                     * 
+                     */
+                    $member = $commentLogic->getMemberLinkedWithComment($comment['member_id']);
+
+                    $member_name = $member['name_sei'] . $member['name_mei'];
+
                     $comment_year = substr($comment['created_at'], 0, 4);
                     $comment_month = substr($comment['created_at'], 5, 2);
                     $comment_day = substr($comment['created_at'], 8, 2);
@@ -184,14 +199,31 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
                 ?>
                 <div>
                     <span><?= $comment['id'] ?>.</span>
-                    <span><?= $_SESSION['login_member']['name_sei'] . $_SESSION['login_member']['name_mei'] ?></span>
+                    <span><?= $member_name ?></span>
                     <span><?= $comment_time ?></span>
                     <div>
                         <span><?= $comment['comment'] ?></span>
                     </div>
+                    <div>
+
+                        <?php
+                            // ----いいねに関するロジック
+
+                            /**
+                             * コメントに紐づくlikeの個数を取得
+                             * @var int
+                             */
+                            $like_count = $likeLogic->getLikeCountLinkedWithComment($comment['id']);
+
+                        ?>
+                        <!-- ハート -->
+                        <form method="POST" action="./<?= threadDetail ?>?id=<?= $thread_num ?>">
+                            <i class="like fa fa-heart"></i>
+                            <span><?= $like_count ?></span>
+                        </form>
+                    </div>
                     <hr>
                 </div>
-    
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
@@ -239,6 +271,22 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
     <?php endif;?>
 
     <script>
+        // いいねクリック処理
+        const likes = document.querySelectorAll('.like');
+
+        likes.forEach(like => {
+
+            addEventListener('click', e => {
+                console.log(e.target.parentElement)
+                e.target.parentElement.submit()
+                e.target.classList.toggle('liked')
+            })
+        })
+
+        // いいねをクリックしたらフォームを送信
+
+        // const 
+
         // ページャー用のjs
         const comment_pager_form = document.querySelector('.comment-pager-form')
         const prev_button = document.querySelector('.prev-button')

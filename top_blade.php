@@ -9,7 +9,8 @@ use App\MemberLogic;
 
 // ログインをしている場合、ログイン情報を格納。
 // ログインをしていない場合はnull
-$member_info = isset($_SESSION['login_member']) ? (array) $_SESSION['login_member'] : null;
+// $member_info = isset($_SESSION['login_member']) ? (array) $_SESSION['login_member'] : null;
+$member_info = isset($_SESSION['login_member']) ? $_SESSION['login_member'] : null;
 
 // ログインユーザ、ゲスト共用ページのため、trueを指定
 $login_flg = MemberLogic::checkAuthenticated(true);
@@ -28,7 +29,7 @@ $login_flg = MemberLogic::checkAuthenticated(true);
     <header>
         <?php if ($login_flg): ?>
 
-            <span>ようこそ、<?= $member_info['name_sei'] . $member_info['name_mei'] ?>さん</span>
+            <span>ようこそ、<?= $member_info[0]['name_sei'] . $member_info[0]['name_mei'] ?>さん</span>
             <a href="<?= dir4 . threadListPage ?>"><button>スレッド一覧</button></a>
 
             <a href="<?= dir4 . threadRegisterFormPage?>"><button>新規スレッド作成</button></a>
@@ -51,7 +52,7 @@ $login_flg = MemberLogic::checkAuthenticated(true);
     </header>
 
     <section>
-        <p>keiziban</p>
+        <p>掲示板</p>
 
         <?php if ($login_flg): ?>
             <a style="display: block; margin-top: 100px"><button>退会</button></a>

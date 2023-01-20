@@ -54,6 +54,7 @@ define("dir3", "Auth/");
 define("dir4", "thread/");
 
 define("dir5", "comment/");
+define("dir6", "like/");
 
 define("MemberLogic","MemberLogic.php");
 define("ThreadLogic","ThreadLogic.php");
@@ -92,6 +93,12 @@ define("threadCreate", "thread_create.php");
 
 define("threadDetail", "thread_detail.php");
 
+//-----------------------
+
 define("commentSave", "comment_save.php");
+
+// ----------------------
+
+define("likeSave", "like_save.php");
 
 ?>

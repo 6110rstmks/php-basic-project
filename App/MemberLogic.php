@@ -28,6 +28,7 @@ class MemberLogic {
 
     /**
      * 
+     * register_confirm_blade.phpにて使用
      * @param string $email
      * @return bool
      * 
@@ -44,7 +45,7 @@ class MemberLogic {
             ':data' => $data,
         ));
 
-        $member = $stmt->fetchAll();
+        $member = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $member;
     }
@@ -56,7 +57,6 @@ class MemberLogic {
      */
     public function createMember(array $memberData)
     {
-        // $result = false; 
         $sql = 'INSERT INTO members (name_sei, name_mei, gender, pref_name, address, password, email) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
         $arr = [];
@@ -105,7 +105,8 @@ class MemberLogic {
         $stmt->bindValue(':password', $password);
 
         $stmt->execute();
-        $member = $stmt->fetchObject();
+        // $member = $stmt->fetchObject();
+        $member = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $member;
     }

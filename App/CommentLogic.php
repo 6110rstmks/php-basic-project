@@ -21,9 +21,6 @@ class CommentLogic {
 
         $timeArray = getdate(time());
 
-        
-
-
         $sql = 'INSERT INTO comments (member_id, thread_id, comment, created_at) VALUES (:member_id, :thread_id, :comment, now())';
 
         $arr = [];
@@ -39,7 +36,26 @@ class CommentLogic {
     }
 
     /**
-     * コメント数を取得
+     * コメントをしたメンバの情報を取得するためのメソッド
+     * 
+     */
+    public function getMemberLinkedWithComment($member_id)
+    {
+        $sql = 'SELECT * FROM members WHERE id = :member_id';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue('member_id', $member_id);
+        $stmt->execute();
+
+        $member = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $member;
+
+    }
+
+    /**
+     * あるスレッドに投稿されたコメント数を取得
      * @param int $thread_id
      * @return int $cnt
      */
@@ -55,8 +71,13 @@ class CommentLogic {
         return $cnt;
     }
 
+    /**
+     * あるスレッドに投稿された
+     * getCommentCountLinkedWithThreadはコメント数を取得するのに対し
+     * このメソッドはモデル？を取得する
+     * 
+     */
     public function getCommentsLinkedWithThread($thread_id, $offset)
-    // public function getCommentsLinkedWithThread($thread_id)
     {
         // $sql = 'SELECT * FROM comments WHERE thread_id = :id';
         $sql = "SELECT * FROM comments WHERE thread_id = :id LIMIT 5 OFFSET :offset";
@@ -67,7 +88,6 @@ class CommentLogic {
         $stmt->execute();
 
         $comments = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        // $comments = $stmt->fetchAll();
 
         return $comments;
     }

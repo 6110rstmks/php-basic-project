@@ -228,7 +228,7 @@ if (strlen($email) >= 201)
 
 /**
  * メールアドレス登録時、既にDBに登録済みのアドレスの場合、エラーが表示されるか
- * あればtrueなければfalse
+ * あればarrayなければfalseが返却される
  * @var bool
  */
 $hasEmail = $memberLogic->checkEmailExist($email);

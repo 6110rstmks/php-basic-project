@@ -19,8 +19,7 @@ $pdo = Database::getInstance();
 $threadLogic = new ThreadLogic($pdo); 
 
 // ログインしているメンバのID
-$member_id = $_SESSION['login_member']['id'];
-
+$member_id = $_SESSION['login_member'][0]['id'];
 
 $threadLogic->createThread($_POST, $member_id);
 
