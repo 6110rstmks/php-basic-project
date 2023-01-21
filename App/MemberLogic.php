@@ -60,7 +60,7 @@ class MemberLogic {
      */
     public function createMember(array $memberData)
     {
-        $sql = 'INSERT INTO members (name_sei, name_mei, gender, pref_name, address, password, email) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO members (name_sei, name_mei, gender, pref_name, address, password, email, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, now())';
 
         $arr = [];
 

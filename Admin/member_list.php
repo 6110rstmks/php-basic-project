@@ -8,6 +8,11 @@ use App\MemberLogic;
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo);
 
+if (isset($_POST['asc_flg']))
+{
+
+}
+
 // 検索ワードからスレッドを取得する
 if (isset($_POST['word']))
 {
@@ -22,8 +27,12 @@ if (isset($_POST['word']))
 
     
 } else {
+    // 降順で取得
     $members = $memberLogic->getAllMembers();
+
 }
+
+
 
 
 ?>
@@ -45,8 +54,12 @@ if (isset($_POST['word']))
     <div style="display: flex;">
         <div>会員一覧</div>
         <button><a href="<?= adminTopPage ?>">トップへ戻る</a></button>
+        <hr>
     </div>
 
+    <button style="margin-top: 100px">
+        <a href="">会員登録</a>
+    </button>
     <form method="POST">
         <table>
 
@@ -126,8 +139,37 @@ if (isset($_POST['word']))
         
     </form>
 
-    <?php foreach($members as $member): ?>
-        <?= $member['name_sei']?>
-    <?php endforeach;?>
+    <table>
+        <tr>
+            <th style="cursor: pointer">
+                <form method="POST">
+                    <input type="hidden" name="order_toggle">
+                    <button>ID▼</button>
+                </form>
+            </th>
+            <th>氏名</th>
+            <th>性別</th>
+            <th>住所</th>
+            <th>登録日時</th>
+            <th>編集</th>
+        </tr>
+        <?php foreach($members as $member): ?>
+            <tr>
+                <td><?= $member['id'] ?></td>
+                <td><?= $member['name_sei'] . $member['name_mei'] ?></td>
+                <!-- <td><?= $member['gender'] ?></td> -->
+                <td>
+                    <?php if ($member['gender'] === 0): ?>
+                        男性
+                    <?php else:?>
+                        女性
+                    <?php endif;?>
+                </td>
+                <td><?= $member['pref_name'] . $member['address']?></td>
+                <td><?= $member['created_at'] ?></td>
+                <td><a href="">編集</a></td>
+            </tr>
+        <?php endforeach;?>
+    </table>
 </body>
 </html>
