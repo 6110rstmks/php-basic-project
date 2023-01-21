@@ -108,4 +108,8 @@ define("adminTopPage", 'admin_top_blade.php');
 
 define("adminLogout", 'admin_logout.php');
 
+define("memberList", 'member_list.php');
+
+define("withdrawalConfirmPage", "withdrawal_confirm_blade.php");
+
 ?>

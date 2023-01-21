@@ -11,6 +11,9 @@ class MemberLogic {
         $this->pdo = $pdo;
     }
 
+    /**
+     * どこで使われてる？
+     */
     public function getMemberById($id)
     {
         $sql = 'SELECT * FROM members Where id = :id';
@@ -154,6 +157,26 @@ class MemberLogic {
 
         exit("ログインしていない場合はアクセスできません。");
         
+    }
+
+    public function getAllMembers()
+    {
+        $sql = "SELECT * FROM members order by id DESC";
+        $stmt = $this->pdo->query($sql);
+        $members = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $members;
+    }
+
+    public function softDelete($member_id)
+    {
+        $sql = "UPDATE members SET deleted_at = now() WHERE id = :member_id";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':member_id', $member_id);
+        
+        $stmt->execute();
     }
 
     /**

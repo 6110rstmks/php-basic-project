@@ -12,7 +12,7 @@ $pdo = Database::getInstance();
 
 $threadLogic = new ThreadLogic($pdo);
 
-
+//　ログインしているかどうか
 $auth_flg = MemberLogic::checkAuthenticated(true);
 
 // ワードからスレッドを取得する

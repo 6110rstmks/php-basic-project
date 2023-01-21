@@ -34,7 +34,7 @@ if (empty($password))
 {
     $err['password_required'] = 'パスワードは必須入力です。';
 
-} elseif (strlen($password) < 21 || strlen($password) > 7) {
+} elseif (strlen($password) < 8 || strlen($password) > 20) {
     $err['password_string_limit'] = 'パスワードは8文字から20文字の間です。';
 }
 

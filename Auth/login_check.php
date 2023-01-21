@@ -23,7 +23,7 @@ $member = $memberLogic->login($email, $password);
 
 // 一致するIdもしくはパスワードがなければ
 // if ($member === false)
-if (empty($member))
+if (empty($member) || !is_null($member[0]['deleted_at']))
 {
 
     $_SESSION['match_err'] = 'IDもしくはパスワードが間違っています';

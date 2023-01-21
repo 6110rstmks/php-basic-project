@@ -34,5 +34,7 @@ $admin_name = $_SESSION['login_admin'][0]['name'];
             <input type="hidden" name="logout" value="logout">
         </form>
     </div>
+
+    <button><a href="<?= memberList ?>">会員一覧</a></button>
 </body>
 </html>

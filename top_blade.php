@@ -2,14 +2,12 @@
 
 session_start();
 
-require_once("./config.php");
-require_once("./App/MemberLogic.php");
+require_once(__DIR__ . '\config.php');
 
 use App\MemberLogic;
 
 // ログインをしている場合、ログイン情報を格納。
 // ログインをしていない場合はnull
-// $member_info = isset($_SESSION['login_member']) ? (array) $_SESSION['login_member'] : null;
 $member_info = isset($_SESSION['login_member']) ? $_SESSION['login_member'] : null;
 
 // ログインユーザ、ゲスト共用ページのため、trueを指定
@@ -55,7 +53,7 @@ $login_flg = MemberLogic::checkAuthenticated(true);
         <p>掲示板</p>
 
         <?php if ($login_flg): ?>
-            <a style="display: block; margin-top: 100px"><button>退会</button></a>
+            <a href="<?= dir3 . withdrawalConfirmPage ?>" style="display: block; margin-top: 100px"><button>退会</button></a>
         <?php endif; ?>
     </section>
 
