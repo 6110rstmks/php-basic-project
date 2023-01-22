@@ -20,3 +20,20 @@ function FormValueRetention($var_name)
 
     return null;
 }
+
+/**
+ * sql文を作成してそれを返す
+ * member_list.phpで使用するかも
+ * ぼつ
+ * @param 
+ * @return string $sql
+ */
+function createQuery(...$column)
+{
+    // $sql = ""
+}
+
+function addOrderQuery($order_flg)
+{
+
+}

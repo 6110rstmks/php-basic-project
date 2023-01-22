@@ -13,17 +13,29 @@ if (isset($_POST['asc_flg']))
 
 }
 
-// 検索ワードからスレッドを取得する
-if (isset($_POST['word']))
+// 検索idからメンバを取得
+if (isset($_POST['id']))
 {
-    $word = $_POST['word'];
+    $id = $_POST['id'];
+}
+
+// 性別からメンバを取得
+elseif (isset($_POST['sex']))
+{
+
+}
+
+// フリーワードからメンバを取得
+elseif (isset($_POST['free_word']))
+{
+    $free_word = $_POST['free_word'];
 
 
     /**
-     * 検索したワードがタイトルもしくはコメント内にあるスレッド一覧を取得
+     * 検索したワードがタイトルもしくはコメント内にあるメンバ一覧を取得
      * @var array|null
      */
-    $threads = $threadLogic->searchThread($word);
+    $members = $memberLogic->searchMember($sql);
 
     
 } else {
@@ -58,7 +70,7 @@ if (isset($_POST['word']))
     </div>
 
     <button style="margin-top: 100px">
-        <a href="">会員登録</a>
+        <a href="<?= memberRegisterFormPage ?>">会員登録</a>
     </button>
     <form method="POST">
         <table>

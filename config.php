@@ -59,7 +59,7 @@ define("ThreadLogic","ThreadLogic.php");
 
 // ---------------------------
 
-define("memberRegisterFormPage", "member_regist.php");
+define("memberRegisterFormPage", "member_regist_blade.php");
 
 define("memberRegisterConfirmPage", "register_confirm_blade.php");
 

@@ -159,6 +159,9 @@ class MemberLogic {
         
     }
 
+    /**
+     * member_list.phpで使用
+     */
     public function getAllMembers()
     {
         $sql = "SELECT * FROM members order by id DESC";
@@ -177,6 +180,34 @@ class MemberLogic {
         $stmt->bindValue(':member_id', $member_id);
         
         $stmt->execute();
+    }
+
+    /**
+     * member_list.phpで使用
+     * @param string $sql, bool $asc_flg
+     */
+    public function searchMember($sql, $asc_flg = false)
+    {
+        if ($asc_flg)
+        {
+            $order_sql = 'order by id ASC';
+
+            $pdo->prepare($sql . $order_sql);
+            $pdo->execute();
+        }
+
+    }
+
+    public function searchMemberById($id)
+    {
+        $sql = 'SELECT * FROM members WHERE id = :id';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':id', $id);
+
+        $stmt->execute();
+
+        // $member = $stmt-;
     }
 
     /**

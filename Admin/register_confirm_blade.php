@@ -169,7 +169,7 @@ if (mb_strlen($password) != mb_strwidth($password))
     $err['password_hankaku'] = 'パスワードは半角英数字でお願いします';
 }
 
-if (!preg_match('/^[a-zA-Z0-9]+$/', $password_cnf))
+if (!preg_match('/[A-Za-z0-9]{8,21}/', $password))
 {
     $err['password_kigoumozi'] = 'パスワードに記号文字は使用できません';
 }
@@ -207,8 +207,7 @@ if ($password != $password_cnf)
 
 // 記号の半角文字が入力された場合
 
-// if (!preg_match('/[A-Za-z0-9]{8,21}/', $password_cnf))
-if (!preg_match('/^[a-zA-Z0-9]+$/', $password_cnf))
+if (!preg_match('/[A-Za-z0-9]{8,21}/', $password_cnf))
 {
     $err['password_cnf_kigoumozi'] = 'パスワード確認に記号文字は使用できません';
 }
@@ -260,7 +259,15 @@ if (count($err) > 0)
     <title>Document</title>
 </head>
 <body>
-    <h2>会員登録確認画面</h2>
+    <section style="display: flex; justify-content: space-between;">
+        <h2>会員登録</h2>
+        <button type="button" onclick="history.back()">戻る</button>
+    </section>
+    <div>
+
+        <span>ID</span>
+        <span>登録後に自動採番</span>
+    </div>
     <div>氏名</div>
     <span style="display: inline"><?= $last_name?></span>
     <span style="display: inline"><?php echo $first_name; ?></span>
@@ -290,8 +297,7 @@ if (count($err) > 0)
         <!--  二重送信対策-->
         <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
 
-        <button>完了画面</button>
+        <button>登録完了</button>
     </form>
-    <button type="button" onclick="history.back()">戻る</button>
 </body>
 </html>
