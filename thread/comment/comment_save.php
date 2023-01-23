@@ -34,8 +34,12 @@ if ($comment == '')
 if (strlen($comment) >= 501)
 {
     $err['other_address_string_limit'] = '500文字以内に収めてください';
-}
-
+} 
+// elseif (mb_strlen($comment) > 501)
+// {
+//     $err['other_address_string_limit'] = '500文字以内に収めてください';
+// }
+    
 if (count($err) > 0)
 {
 

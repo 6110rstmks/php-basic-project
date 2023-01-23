@@ -179,7 +179,7 @@ elseif (isset($_POST['free_word']))
                 </td>
                 <td><?= $member['pref_name'] . $member['address']?></td>
                 <td><?= $member['created_at'] ?></td>
-                <td><a href="">編集</a></td>
+                <td><a href="<?= memberEditPage . '?id=' . $member['id'] ?>">編集</a></td>
             </tr>
         <?php endforeach;?>
     </table>

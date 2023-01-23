@@ -112,4 +112,6 @@ define("memberList", 'member_list.php');
 
 define("withdrawalConfirmPage", "withdrawal_confirm_blade.php");
 
+define("memberEditPage" ,"member_edit_blade.php")
+
 ?>

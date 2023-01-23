@@ -12,7 +12,7 @@ class MemberLogic {
     }
 
     /**
-     * どこで使われてる？
+     * thread_detail.phpで使用
      */
     public function getMemberById($id)
     {
@@ -183,7 +183,7 @@ class MemberLogic {
     }
 
     /**
-     * member_list.phpで使用
+     * member_list.phpで使用,getMemberByIDと処理が同じです。
      * @param string $sql, bool $asc_flg
      */
     public function searchMember($sql, $asc_flg = false)

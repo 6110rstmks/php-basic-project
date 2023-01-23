@@ -31,9 +31,17 @@ if (!$thread_num)
 
 /**
  * スレッドidに紐づくスレッドの情報を取得
- * @var array
+ * @var array|
  */
 $thread = $threadLogic->getThreadById($thread_num);
+
+// スレッドidが存在しないidでアクセスしたとき
+if ($thread === false)
+{
+    echo '<a>スレッド一覧へ</a>';
+    echo '<br>';
+    exit('そのidを持つスレッドが作られていません');
+}
 
 // ログインしているメンバのIDを取得
 if (isset($_SESSION['login_member']))
@@ -50,7 +58,11 @@ if (isset($_SESSION['err']))
     unset($_SESSION['err']);
 }
 
-// スレッドに紐づいたメンバの情報を取得
+// 
+/**
+ * スレッドに紐づいたメンバの情報を取得
+ * @var array|bool
+ */
 $memberLinkedThread = $memberLogic->getMemberById($thread['member_id']);
 
 
@@ -156,7 +168,7 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
     <div style="margin-top: 20px; border: 1px blue solid; color: blue;">
         <div>
             <span>投稿者:</span>
-            <?php if (isset($memberLinkedThread)): ?>
+            <?php if ($memberLinkedThread != false): ?>
                 <span><?= $memberLinkedThread->name_sei . $memberLinkedThread->name_mei ?></>
             <?php endif; ?>
             <?php
@@ -272,7 +284,7 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
         </form>
     </div>
 
-    <!-- コメントボックス -->
+    <!-- コメント追加ボックス -->
     <?php if ($auth_flg): ?>
         <form action="<?= dir5 . commentSave ?>" method="POST">
 

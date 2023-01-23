@@ -19,18 +19,36 @@ if (!isset($title))
 $err_flg = false;
 
 // ---title---
+$len = mb_strlen($title, "UTF-8");
 
-if (strlen($title) >= 101) {
-    $_SESSION['thread_title_count'] = 'タイトルの入力は100文字以下である必要があります';
-    $err_flg = true;
-    
+$wdt = mb_strwidth($title, "UTF-8");
+
+
+if($len == $wdt) {
+    // すべて半角の場合
+
+    if (strlen($title) >= 101)
+    {
+        $mozisuu = strlen($title);
+        $_SESSION['thread_title_count'] = 'タイトルの入力は100文字以下である必要があります';
+        $err_flg = true;
+    }
+
 } 
+elseif($len * 2 == $wdt) {
+// すべて全角の場合
+    if (mb_strlen($title) > 100)
+    {
+        $zenkakumozisuu = mb_strlen($title);
+        $_SESSION['thread_title_count'] = 'タイトルの入力は100文字以下である必要があります';
+        $err_flg = true;
+    }
 
-if (mb_strlen($title) >= 101)
-{
-    $_SESSION['thread_title_count'] = 'タイトルの入力は100文字以下である必要があります';
-    $err_flg = true;
+} else {
+// 全角・半角が混在している場合
+
 }
+
 
 if (empty($title))
 {
@@ -41,13 +59,41 @@ if (empty($title))
 
 // ---comment----
 
-if (strlen($comment) >= 501) {
-    // 確認画面にリダイレクトする
-    $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
-    $err_flg = true;
-} elseif (mb_strlen($comment) >= 501) {
-    $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
-    $err_flg = true;
+// if (strlen($comment) >= 501) {
+//     // 確認画面にリダイレクトする
+//     $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
+//     $err_flg = true;
+// } elseif (mb_strlen($comment) >= 501) {
+//     $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
+//     $err_flg = true;
+// }
+
+$len = mb_strlen($comment, "UTF-8");
+$wdt = mb_strwidth($comment, "UTF-8");
+$zenkakuzz = mb_strlen($comment);
+
+
+if($len == $wdt) {
+    // すべて半角の場合
+
+    if (strlen($comment) >= 501)
+    {
+        $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
+        $err_flg = true;
+    }
+
+} elseif($len * 2 == $wdt) {
+// すべて全角の場合
+    if (mb_strlen($comment) >= 501)
+    {
+        $zenkakuzz = mb_strlen($comment);
+        $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
+        $err_flg = true;
+    }
+
+} else {
+// 全角・半角が混在している場合
+
 }
 
 

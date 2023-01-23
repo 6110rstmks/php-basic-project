@@ -68,18 +68,14 @@ $_SESSION['login_member'] = $login_member;
 <body>
     <?php
 
-        if (isset($session_err_msgs))
-        {
-            var_dump($session_err_msgs);
-        }
+        // if (isset($session_err_msgs))
+        // {
+        //     var_dump($session_err_msgs);
+        // }
     ?>
     <h1>スレッド作成フォーム</h1>
     <form action="<?= threadRegisterConfirmPage ?>" method="POST">
-        <?php if (isset($session_err_msgs)): ?>
-            <?php foreach($session_err_msgs as $msg): ?>
-                <span><?= $msg; ?></span>
-            <?php endforeach;?>
-        <?php endif;?>
+
 
         <p>
             <label for="">スレッドタイトル</label>
@@ -90,9 +86,15 @@ $_SESSION['login_member'] = $login_member;
             <textarea name="comment" cols="30" rows="10"><?php if(isset($thread_comment)) { echo $thread_comment; } ?></textarea>
         </p>
 
+        <?php if (isset($session_err_msgs)): ?>
+            <?php foreach($session_err_msgs as $msg): ?>
+                <span><?= $msg; ?></span>
+            <?php endforeach;?>
+        <?php endif;?>
+
         <button>確認画面へ</button>
     </form>
-    <button><a href="../<?= topPage?>">トップへ戻る</a></button>
-    <button><a href="<?= threadDetail ?>">スレッド一覧にもどる</a></button>
+    <button><a href="../<?= topPage ?>">トップへ戻る</a></button>
+    <button><a href="<?= threadListPage ?>">スレッド一覧にもどる</a></button>
 </body>
 </html>
