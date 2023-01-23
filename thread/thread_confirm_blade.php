@@ -59,19 +59,8 @@ if (empty($title))
 
 // ---comment----
 
-// if (strlen($comment) >= 501) {
-//     // 確認画面にリダイレクトする
-//     $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
-//     $err_flg = true;
-// } elseif (mb_strlen($comment) >= 501) {
-//     $_SESSION['thread_comment_count'] = 'コメントの入力は500文字以下である必要があります';
-//     $err_flg = true;
-// }
-
 $len = mb_strlen($comment, "UTF-8");
 $wdt = mb_strwidth($comment, "UTF-8");
-$zenkakuzz = mb_strlen($comment);
-
 
 if($len == $wdt) {
     // すべて半角の場合
