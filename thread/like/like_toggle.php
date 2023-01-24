@@ -29,22 +29,25 @@ $comment_id = filter_input(INPUT_POST, "comment_id");
 $thread_id = filter_input(INPUT_POST, "thread_id");
 
 /**
- * likes tableにめんばidとcomment_idをもったレコードがあるか確認
- * あれば、trueなければfalseを返す
+ * likes tableにmember_idとcomment_idをもったレコードがあるか確認
+ * あれば、trueなければfalseを返す。
+ * 現在ログインしているメンバがそのいいねをlikeしたかどうか判別する
  * @var bool
  */
 $like_bool = $likeLogic->checkLikeRecord($member_id, $comment_id);
 
-// trueであればlikeを削除
+// trueであればlikeレコードを削除
 if ($like_bool)
 {
     $likeLogic->deleteLikeRecord($member_id, $comment_id);
 
 } else {
+
+    // trueでなければ新規でいいねレコードを作成
     $likeLogic->createLikeRecord($member_id, $comment_id);
 }
 
-
+// もとのスレッド詳細ページへ
 header('Location: ../'. threadDetail . '?id=' .  $thread_id );
 
 

@@ -226,31 +226,46 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
                              */
                             $like_count = $likeLogic->getLikeCountLinkedWithComment($comment['id']);
 
+                            /**
+                             * 現在ログインしているメンバが一度、あるスレッドの中の一つのいいねマークにいいねしたかどうか判別
+                             * していれば赤色のハートを表示
+                             * していなければ無色のハート
+                             * trueもしくはfalseが帰ってくる
+                             * @var 
+                             */
+                            $like_check_flg = $likeLogic->checkLikeRecord($member_id, $comment['id']);
+
                         ?>
                         <!-- ハート -->
-                        <!-- ログインしている場合、likeToggleへ繊維 -->
-                        <?php if ($auth_flg): ?>
-                            <form method="POST" action="<?= dir6 . likeToggle ?>">
-                                <?php if ($like_count === 0): ?>
-                                    <span class="like">♡</span>
+                        <section class="like-section">
+                            <!-- ログインしている場合、likeToggleへ繊維 -->
+                            <?php if ($auth_flg): ?>
+                                <form method="POST" action="<?= dir6 . likeToggle ?>">
+                                <!-- 現在ログインしているメンバで一度そのいいねにいいねしている場合 -->
+                                    <?php if (!$like_check_flg): ?>
+                                        <span class="like">♡</span>
 
-                                <?php else: ?>
-                                    <span class="like" style="color: red;">♥</span>
-                                <?php endif;?>
-                            <input type="hidden" name="thread_id" value="<?= $thread_num?>">
-                            <input type="hidden" name="comment_id" value="<?= $comment['id']?>">
-                            </form>
-                        <!-- ログインしていない場合、loginPageへ遷移 -->
-                        <?php else: ?>
-                            <form method="GET" action="../<?= dir2 . memberRegisterFormPage ?>">
-                                <?php if ($like_count === 0): ?>
-                                    <span class="like">♡</span>
-                                <?php else: ?>
-                                    <span class="like" style="color: red;">♥</span>
-                                <?php endif;?>
-                            </form>
-                        <?php endif;?>
-                        <span><?= $like_count ?></span>
+                                    <?php else: ?>
+                                        <span class="like" style="color: red;">♥</span>
+                                    <?php endif;?>
+                                <input type="hidden" name="thread_id" value="<?= $thread_num?>">
+                                <input type="hidden" name="comment_id" value="<?= $comment['id']?>">
+                                </form>
+
+                            <!-- ログインしていない場合、loginPageへ遷移 -->
+                            <?php else: ?>
+                                <form method="GET" action="../<?= dir2 . memberRegisterFormPage ?>">
+                                    <?php if ($like_count === 0): ?>
+                                        <span class="like">♡</span>
+                                    <?php else: ?>
+                                        <span class="like" style="color: red;">♥</span>
+                                    <?php endif;?>
+                                </form>
+                            <?php endif;?>
+
+                            <!-- いいね個数を表示 -->
+                            <span><?= $like_count ?></span>
+                        </section>
                     </div>
                     <hr>
                 </div>
@@ -300,23 +315,5 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
     <?php endif;?>
 
     <script src="../main.js"></script>
-    <script>
-        // ページャー用のjs
-        const comment_pager_form = document.querySelector('.comment-pager-form')
-        const prev_button = document.querySelector('.prev-button')
-        const next_button = document.querySelector('.next-button')
-
-        prev_button.addEventListener('click', () => {
-            prev_button.parentElement.submit();
-        })
-
-        if (next_button)
-        {
-            next_button.addEventListener('click', () => {
-                next_button.parentElement.submit();
-            })
-        }
-
-    </script>
 </body>
 </html>

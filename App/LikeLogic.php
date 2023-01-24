@@ -12,6 +12,11 @@ class LikeLogic {
         $this->pdo = $pdo;
     }
 
+    /**
+     * like_toggle.phpで使用
+     * @
+     * @return true|false
+     */
     public function checkLikeRecord($member_id, $comment_id)
     {
         $sql = 'SELECT * from likes WHERE member_id = :member_id and comment_id = :comment_id';
@@ -30,10 +35,12 @@ class LikeLogic {
             return $like;
         }
 
-
-
     }
 
+    /**
+     * 
+     * @return int
+     */
     public function getLikeCountLinkedWithComment($comment_id)
     {
         $sql = 'SELECT count(*) FROM likes WHERE comment_id = :comment_id';
@@ -46,6 +53,10 @@ class LikeLogic {
         return $cnt;
     }
 
+    /**
+     * 自分がスレッドに付属するコメントにいいねをすると、いいねが作成される。
+     * ただし、そのコメントにいいねを既にしていた場合、いいねが削除される（レコードが削除される）
+     */
     public function createLikeRecord($member_id, $comment_id)
     {
         $sql = 'INSERT INTO likes (member_id, comment_id) VALUES (:member_id, :comment_id)';
@@ -58,6 +69,9 @@ class LikeLogic {
         $stmt->execute();
     }
 
+    /**
+     * 自分がいいねしたいいねボタンをもう一度押すと、いいねレコードが消える。
+     */
     public function deleteLikeRecord($member_id, $comment_id)
     {
         $sql = 'DELETE FROM likes WHERE member_id = (:member_id) and comment_id = (:comment_id)';
