@@ -58,6 +58,7 @@ if (count($err) > 0)
     header('Location:' . adminLoginPage);
 
 } else {
+    // ログイン成功
     session_regenerate_id(true);
 
     header('Location:' . adminTopPage);

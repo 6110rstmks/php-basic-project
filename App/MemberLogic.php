@@ -93,7 +93,9 @@ class MemberLogic {
     }
 
     /**
-     * ログイン
+     * そのメンバを返すことでログインする。
+     * 関数の呼び出し側で戻り値をうけとりそれをsessionに格納
+     * 
      * @param string $email, $password
      * @return array $member
      * 
@@ -111,11 +113,6 @@ class MemberLogic {
         $member = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $member;
-    }
-
-    public function getNameByEmail($email)
-    {
-
     }
 
     /**
@@ -183,19 +180,38 @@ class MemberLogic {
     }
 
     /**
-     * member_list.phpで使用,getMemberByIDと処理が同じです。
-     * @param string $sql, bool $asc_flg
+     * member_list.phpで使用
+     * @param string $sql, array $_post
      */
-    public function searchMember($sql, $asc_flg = false)
+    public function searchMember($sql, $_post)
     {
-        if ($asc_flg)
-        {
-            $order_sql = 'order by id ASC';
 
-            $pdo->prepare($sql . $order_sql);
-            $pdo->execute();
+        $stmt = $this->pdo->prepare($sql);
+
+        if (!empty($_post['id']))
+        {
+            $stmt->bindValue(':id', $_post['id']);
         }
 
+        if (!empty($_post['prefecture']))
+        {
+            $stmt->bindValue(':pref_name', $_post['prefecture']);
+        }
+
+        if (!empty($_post['free_word']))
+        {
+            $pattern = '%' . $_post['free_word'] . '%'; 
+
+            $stmt->bindValue(':free_word1', $pattern);
+            $stmt->bindValue(':free_word2', $pattern);
+            $stmt->bindValue(':free_word3', $pattern);
+        }
+
+        $stmt->execute();
+
+        $members = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $members;
     }
 
     public function searchMemberById($id)
@@ -207,7 +223,6 @@ class MemberLogic {
 
         $stmt->execute();
 
-        // $member = $stmt-;
     }
 
     /**

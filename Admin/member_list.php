@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require_once(__DIR__ . '/../config.php');
 
 use App\Database;
@@ -12,60 +14,80 @@ $sql = 'SELECT * FROM members WHERE true';
 
 
 // 検索idの指定がある場合
-if (isset($_POST['id']))
+if (!empty($_POST['id']))
 {
-    $id = $_POST['id'];
-    $sql .= "AND id = :id";
+    $sql .= " AND id = :id";
 }
 
 // 検索フォームにて男性のみの指定がある場合
-if (isset($_POST['male']) || !isset($_POST['female']))
+if (isset($_POST['male']) && !isset($_POST['female']))
 {
-    $sql .= "AND gender = 0";
+    $sql .= " AND gender = 0";
     
-} elseif (!isset($_POST['male']) || isset($_POST['female']))
+} elseif (!isset($_POST['male']) && isset($_POST['female']))
 {
     // 女性のみの指定がある場合
-    $sql .= "AND gender = 1";
+    $sql .= " AND gender = 1";
 
 
-} elseif (isset($_POST['male']) || isset($_POST['female']))
+} elseif (isset($_POST['male']) && isset($_POST['female']))
 {
     // 男性、女性、両方の指定がある場合
-    $sql .= "AND (gender = 1 OR gender = 0)";
+    $sql .= " AND (gender = 1 OR gender = 0)";
 
 }
 
+if (!empty($_POST['prefecture']))
+{
+    $sql .= " AND pref_name = :pref_name";
+}
 
 
 // 検索フォームにてフリーワードの指定がある場合
-if (isset($_POST['free_word']))
+if (!empty($_POST['free_word']))
 {
-    $free_word = $_POST['free_word'];
-
-    $pattern1 = '%' . $free_word . '%'; 
-    $sql .= "AND (name_sei Like :free_word OR name_mei Like :free_word OR email LIKE :free_word)";
-
-    /**
-     * 検索したワードがタイトルもしくはコメント内にあるメンバ一覧を取得
-     * @var array|null
-     */
-    $members = $memberLogic->searchMember($sql);
+    $sql .= " AND (name_sei Like :free_word1 OR name_mei Like :free_word2 OR email LIKE :free_word3)";
 
     
-} else {
-    // 降順で取得
-    $members = $memberLogic->getAllMembers();
-
 }
 
-if (isset($_POST['asc_flg']))
+// @var bool
+
+// asc_flgをセッションに保存している
+// つまりリストページをリロードしたときではないとき
+// フラグを取り出す。
+if (isset($_POST['asc_flg']) && isset($_SESSION['asc_flg']))
+{
+    $asc_flg = $_SESSION['asc_flg'];
+
+} else {
+
+    // リロードしたときのデフォルトはfalse
+    // つまり降順
+    $asc_flg = false;
+}
+
+if ($asc_flg == true)
 // 昇順ボタンを押した場合
 {
-    $asc_flg = true;
-    $sql .= "ORDER BY id ASC";
+    $_SESSION['asc_flg'] = false;
+
+    $sql .= " ORDER BY id ASC";
+
+} elseif ($asc_flg == false) {
+    
+    // 次にボタンを押した際は昇順になる
+    $_SESSION['asc_flg'] = true;
+
+    // 今回は昇順
+    $sql .= " ORDER BY id DESC";
 }
 
+// ある条件の検索のために作成したsqlを昇順、降順のtoggleにするために
+// sessionに保存
+$_SESSION['sql'] = $sql;
+
+$members = $memberLogic->searchMember($sql, $_POST);
 
 ?>
 
@@ -175,7 +197,7 @@ if (isset($_POST['asc_flg']))
         <tr>
             <th style="cursor: pointer">
                 <form method="POST">
-                    <input type="hidden" name="order_toggle">
+                    <input type="hidden" name="asc_flg">
                     <button>ID▼</button>
                 </form>
             </th>
