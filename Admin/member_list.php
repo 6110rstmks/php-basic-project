@@ -47,45 +47,43 @@ if (!empty($_POST['prefecture']))
 if (!empty($_POST['free_word']))
 {
     $sql .= " AND (name_sei Like :free_word1 OR name_mei Like :free_word2 OR email LIKE :free_word3)";
-
-    
 }
 
-// @var bool
+//-----------------------------------
+// 昇順　降順toggle
 
-// asc_flgをセッションに保存している
-// つまりリストページをリロードしたときではないとき
-// フラグを取り出す。
-if (isset($_POST['asc_flg']) && isset($_SESSION['asc_flg']))
+// ページリロード時はデフォルトでDESC
+// if (!isset($_SESSION['sql']))
+// {
+//     $sql .= " ORDER BY id DESC";
+// }
+
+// 昇順降順のtoggleボタンを押した場合
+if (isset($_POST['order_toggle']))
 {
-    $asc_flg = $_SESSION['asc_flg'];
 
+    // このif文より上の行で作成した$sqlを破棄して$_POSTの値を使用
+    $sql = $_SESSION['sql'];
+
+    // ASCの文字列をsql文の中に持つ場合（ボタンを押す前の順番が昇順の場合）
+    // if (strpos($_SESSION['sql'], "ASC") !== false)
+    if (strpos($sql, "ASC") !== false)
+    {
+        // sql文からASCを削除してDESCに変更
+        $sql = str_replace('ASC', 'DESC', $sql);
+    } elseif (strpos($sql, "DESC") !== false)
+    {
+        $sql = str_replace('DESC', 'ASC', $sql);   
+    }
 } else {
-
-    // リロードしたときのデフォルトはfalse
-    // つまり降順
-    $asc_flg = false;
-}
-
-if ($asc_flg == true)
-// 昇順ボタンを押した場合
-{
-    $_SESSION['asc_flg'] = false;
-
-    $sql .= " ORDER BY id ASC";
-
-} elseif ($asc_flg == false) {
-    
-    // 次にボタンを押した際は昇順になる
-    $_SESSION['asc_flg'] = true;
-
-    // 今回は昇順
     $sql .= " ORDER BY id DESC";
 }
 
 // ある条件の検索のために作成したsqlを昇順、降順のtoggleにするために
 // sessionに保存
+// $_SESSION['sql']一つ前の$sqlの内容を保存するための、退避用変数として利用する。
 $_SESSION['sql'] = $sql;
+
 
 $members = $memberLogic->searchMember($sql, $_POST);
 
@@ -197,7 +195,7 @@ $members = $memberLogic->searchMember($sql, $_POST);
         <tr>
             <th style="cursor: pointer">
                 <form method="POST">
-                    <input type="hidden" name="asc_flg">
+                    <input type="hidden" name="order_toggle">
                     <button>ID▼</button>
                 </form>
             </th>
@@ -211,7 +209,6 @@ $members = $memberLogic->searchMember($sql, $_POST);
             <tr>
                 <td><?= $member['id'] ?></td>
                 <td><?= $member['name_sei'] . $member['name_mei'] ?></td>
-                <!-- <td><?= $member['gender'] ?></td> -->
                 <td>
                     <?php if ($member['gender'] === 0): ?>
                         男性

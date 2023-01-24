@@ -1,0 +1,35 @@
+
+
+// @var bool
+
+// asc_flgをセッションに保存している
+// つまりリストページをリロードしたときではないとき
+// フラグを取り出す。
+if (isset($_POST['asc_flg']) && isset($_SESSION['asc_flg']))
+{
+    $asc_flg = $_SESSION['asc_flg'];
+
+} else {
+
+    // リロードしたときのデフォルトはfalse
+    // つまり降順
+    $asc_flg = false;
+}
+
+
+
+if ($asc_flg == true)
+// 昇順ボタンを押した場合
+{
+    $_SESSION['asc_flg'] = false;
+
+    $sql .= " ORDER BY id ASC";
+
+} elseif ($asc_flg == false) {
+    
+    // 次にボタンを押した際は昇順になる
+    $_SESSION['asc_flg'] = true;
+
+    // 今回は昇順
+    $sql .= " ORDER BY id DESC";
+}
