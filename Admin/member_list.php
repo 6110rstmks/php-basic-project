@@ -8,28 +8,36 @@ use App\MemberLogic;
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo);
 
+$sql = 'SELECT * FROM members WHERE true';
+
 if (isset($_POST['asc_flg']))
 {
-
+    $asc_flg = true;
+    $sql .= "ORDER BY id ASC";
 }
 
-// 検索idからメンバを取得
+// 検索idの指定がある場合
 if (isset($_POST['id']))
 {
     $id = $_POST['id'];
+    $sql .= "AND id = :id";
 }
 
-// 性別からメンバを取得
-elseif (isset($_POST['sex']))
+// 検索フォームにて性別の指定がある場合
+if (isset($_POST['sex']))
 {
 
 }
 
-// フリーワードからメンバを取得
-elseif (isset($_POST['free_word']))
+
+
+// 検索フォームにてフリーワードの指定がある場合
+if (isset($_POST['free_word']))
 {
     $free_word = $_POST['free_word'];
 
+    $pattern1 = '%' . $free_word . '%'; 
+    $sql .= "AND (name_sei Like :free_word OR name_mei Like :free_word OR email LIKE :free_word)";
 
     /**
      * 検索したワードがタイトルもしくはコメント内にあるメンバ一覧を取得
@@ -82,9 +90,9 @@ elseif (isset($_POST['free_word']))
             <tr>
                 <td>性別</td>
                 <td>
-                    <input type="radio" name="sex" value="0" <?php if (isset($sex) && $sex == "0") { echo "checked";} ?>>
+                    <input type="checkbox" name="sex" value="0" <?php if (isset($sex) && $sex == "0") { echo "checked";} ?>>
                     <label for="">男性</label>
-                    <input type="radio" name="sex" value="1" <?php if (isset($sex) && $sex == "1") { echo 'checked';} ?>>
+                    <input type="checkbox" name="sex" value="1" <?php if (isset($sex) && $sex == "1") { echo 'checked';} ?>>
                     <label for="">女性</label>
                 </td>
             </tr>

@@ -47,9 +47,6 @@ class ThreadLogic {
      */
     public function createThread(array $threadData, int $id)
     {
-
-        
-
         $sql = 'INSERT INTO threads (member_id, title, content, created_at) VALUES (:member_id, :title, :content, now())';
 
         $arr = [];
@@ -78,6 +75,7 @@ class ThreadLogic {
 
     /**
      * $wordの文字を含むスレッドタイトル、スレッドのコンテンツのスレッド検索してthreadのModelを返す
+     * thread.phpで使用
      * @param str $word
      * @return array|false
      */
