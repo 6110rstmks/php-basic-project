@@ -214,7 +214,8 @@ class MemberLogic {
 
         $stmt->execute();
 
-        $cnt = $stmt->fetchColumn();
+        // $cnt = $stmt->fetchColumn();
+        $cnt = $stmt->rowCount();
 
         return $cnt;
     }

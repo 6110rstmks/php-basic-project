@@ -13,3 +13,7 @@
     -moz-filter: blur(2px);
     filter: blur(2px);
 }
+
+button {
+    background-color: white;
+}
