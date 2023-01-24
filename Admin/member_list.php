@@ -74,30 +74,43 @@ if (isset($_POST['order_toggle']))
     $sql .= " ORDER BY id DESC";
 }
 
-// ある条件の検索のために作成したsqlを昇順、降順のtoggleにするために
-// sessionに保存
-// $_SESSION['sql']一つ前の$sqlの内容を保存するための、退避用変数として利用する。
-$_SESSION['sql'] = $sql;
+
 
 //----------pagerのための処理
 
-// メンバ数を取得
-$ttl_member = $memberLogic->CountSearchMember($sql, $_POST);
+// メンバ数を取得。ただし検索フォームに値が
+if (count($_POST) === 0 && isset($_GET['pager']))
+{
+    $ttl_member = $_SESSION['temporary_ttl_member'];
+    
+} else {
+    $ttl_member = $memberLogic->CountSearchMember($sql, $_POST);
+    $_SESSION['temporary_ttl_member'] = $ttl_member;
+}
 
 //　メンバのページャーの数を取得
 
-$member_pager_ttl = ($ttl_member) % 4 + 1;
+$member_pager_ttl = (int) ceil(($ttl_member) / 10);
 
 if (isset($_GET['pager']))
 {
     $now_member_pager = (int) $_GET['pager'];
+    $sql = $_SESSION['sql'];
 
 } else {
     $now_member_pager = 1;
 }
 
-$prev_member_pager = $now_member_pager === 1 ? null : max($now_member_pager - 1, 1); 
-$next_member_pager = $now_member_pager === $member_pager_ttl || $member_pager_ttl == 1 ? null : min($now_member_pager + 1, $ttl_member); 
+// $prev_member_pager = $now_member_pager === 1 ? null : max($now_member_pager - 1, 1); 
+// $next_member_pager = $now_member_pager === $member_pager_ttl || $member_pager_ttl == 1 ? null : min($now_member_pager + 1, $ttl_member); 
+
+//---------------------------------------------------------------------
+
+// ある条件の検索のために作成したsqlに対して昇順、降順のtoggleするために使用。
+// またある条件の検索して取得した検索結果の行のページャーを移動した場合のsql文を取得するために使用
+// sessionに保存
+// $_SESSION['sql']一つ前の$sqlの内容を保存するための、退避用変数として利用する。
+$_SESSION['sql'] = $sql;
 
 //-----------------------------
 
@@ -133,7 +146,7 @@ $members = $memberLogic->searchMember($sql, $_POST, $offset);
     <button style="margin-top: 100px">
         <a href="<?= memberRegisterFormPage ?>">会員登録</a>
     </button>
-    <form method="POST">
+    <form method="POST" action="member_list.php">
         <table>
 
             <tr>
@@ -246,21 +259,55 @@ $members = $memberLogic->searchMember($sql, $_POST, $offset);
 
     <!-- ページャー -->
 
-    <section class="member-pager">
+    <section style="margin-top: 50px; display: flex" class="pager">
 
         <!-- ＜前へ＞の部分 -->
-        <form action="">
-            <?php if (is_null($prev_member_pager)): ?>
-                <span></span>
-            <?php else: ?>
-                <a href=""></a>
-            <?php endif;?>
-            <input type="hidden" name="">
-        </form>
+        <?php if ($now_member_pager === 1): ?>
+            <button><span>前へ></span></button>
+        <?php else: ?>
+            <form action="" method="GET">
+                <button href="">前へ></button>
+                <input type="hidden" name="pager" value="<?= $now_member_pager - 1?>">
 
-        <form action="">
-            <?php ?>
-        </form>
+            </form>
+        <?php endif;?>
+
+        <!-- ここから下は数字を表示するHTML部分 -->
+
+        <!-- 現在の２つ前のページ -->
+        <?php if ($now_member_pager ===  $member_pager_ttl): ?>
+            <form action="">
+                <button class="member-pager" style="border: 1px black solid"><?= $now_member_pager - 2 ?></button>
+                <input type="hidden" name="pager" value="<?= $now_member_pager - 2?>">
+            </form>
+        <?php endif;?>
+
+        <!-- 現在の一つ前のページ -->
+        <?php if ($now_member_pager !== 1): ?>
+            <form action="">
+                <button style="border: 1px black solid"><?= $now_member_pager -1 ?></button>
+                <input type="hidden" name="pager" value="<?= $now_member_pager -1?>">
+            </form>
+        <?php endif; ?>
+
+        <!-- 現在のページ -->
+        <button class="member-pager" style="border: 1px black solid; background-color: red;"><?= $now_member_pager + 0 ?></button>
+
+        <!-- 現在の一つ次のページ -->
+        <?php if ($member_pager_ttl >= $now_member_pager + 1): ?>
+            <form action="">
+                <button class="member-pager" style="border: 1px black solid"><?= $now_member_pager + 1 ?></button>
+                <input type="hidden" name="pager" value="<?= $now_member_pager + 1?>">
+            </form>
+        <?php endif; ?>
+
+        <!-- 現在の２つ次のページ -->
+        <?php if ($now_member_pager === 1 && $member_pager_ttl >= $now_member_pager + 2): ?>
+            <form action="">
+                <button class="member-pager" style="border: 1px black solid"><?= $now_member_pager + 2 ?></button>
+                <input type="hidden" name="pager" value="<?= $now_member_pager + 2?>">
+            </form>
+        <?php endif;?>
 
         <!-- ＜後へ＞の部分 -->
     </section>
