@@ -138,7 +138,7 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
-    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link rel ="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Document</title>
 </head>
 <body style="background-color: #B0E0E6">
@@ -232,10 +232,10 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
                         <?php if ($auth_flg): ?>
                             <form method="POST" action="<?= dir6 . likeToggle ?>">
                                 <?php if ($like_count === 0): ?>
-                                    <i class="like fa fa-heart"></i>
+                                    <span class="like">♡</span>
 
                                 <?php else: ?>
-                                    <i class="like liked fa fa-heart"></i>
+                                    <span class="like" style="color: red;">♥</span>
                                 <?php endif;?>
                             <input type="hidden" name="thread_id" value="<?= $thread_num?>">
                             <input type="hidden" name="comment_id" value="<?= $comment['id']?>">
@@ -244,9 +244,9 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
                         <?php else: ?>
                             <form method="GET" action="../<?= dir2 . memberRegisterFormPage ?>">
                                 <?php if ($like_count === 0): ?>
-                                    <i class="like fa fa-heart"></i>
+                                    <span class="like">♡</span>
                                 <?php else: ?>
-                                    <i class="like liked fa fa-heart"></i>
+                                    <span class="like" style="color: red;">♥</span>
                                 <?php endif;?>
                             </form>
                         <?php endif;?>
@@ -287,7 +287,6 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
     <!-- コメント追加ボックス -->
     <?php if ($auth_flg): ?>
         <form action="<?= dir5 . commentSave ?>" method="POST">
-
             <textarea name="comment" id="" cols="30" rows="10"></textarea>
             <input type="hidden" name="thread_id" value="<?= $thread_num?>">
             <button>コメントする</button>
@@ -300,21 +299,8 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
         <?php endif;?>
     <?php endif;?>
 
+    <script src="../main.js"></script>
     <script>
-        // いいねクリック処理
-        const likes = document.querySelectorAll('.like');
-
-        likes.forEach(like => {
-
-            addEventListener('click', e => {
-                // いいねをクリックしたらフォームを送信
-                e.target.parentElement.submit()
-            })
-        })
-
-
-        // const 
-
         // ページャー用のjs
         const comment_pager_form = document.querySelector('.comment-pager-form')
         const prev_button = document.querySelector('.prev-button')
@@ -324,9 +310,13 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
             prev_button.parentElement.submit();
         })
 
-        next_button.addEventListener('click', () => {
-            next_button.parentElement.submit();
-        })
+        if (next_button)
+        {
+            next_button.addEventListener('click', () => {
+                next_button.parentElement.submit();
+            })
+        }
+
     </script>
 </body>
 </html>

@@ -5,3 +5,11 @@
 .liked {
     color: red;
 }
+
+.fa-li {
+    opacity: 0.75;                /* Opacity (Transparency) */
+    color: rgba(0, 0, 0, 0.75);   /* RGBA Color (Alternative Transparency) */
+    -webkit-filter: blur(2px);    /* Blur */
+    -moz-filter: blur(2px);
+    filter: blur(2px);
+}
