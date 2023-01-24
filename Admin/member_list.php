@@ -49,14 +49,9 @@ if (!empty($_POST['free_word']))
     $sql .= " AND (name_sei Like :free_word1 OR name_mei Like :free_word2 OR email LIKE :free_word3)";
 }
 
+
 //-----------------------------------
 // 昇順　降順toggle
-
-// ページリロード時はデフォルトでDESC
-// if (!isset($_SESSION['sql']))
-// {
-//     $sql .= " ORDER BY id DESC";
-// }
 
 // 昇順降順のtoggleボタンを押した場合
 if (isset($_POST['order_toggle']))
@@ -84,8 +79,34 @@ if (isset($_POST['order_toggle']))
 // $_SESSION['sql']一つ前の$sqlの内容を保存するための、退避用変数として利用する。
 $_SESSION['sql'] = $sql;
 
+//----------pagerのための処理
 
-$members = $memberLogic->searchMember($sql, $_POST);
+// メンバ数を取得
+$ttl_member = $memberLogic->CountSearchMember($sql, $_POST);
+
+//　メンバのページャーの数を取得
+
+$member_pager_ttl = ($ttl_member) % 4 + 1;
+
+if (isset($_GET['pager']))
+{
+    $now_member_pager = (int) $_GET['pager'];
+
+} else {
+    $now_member_pager = 1;
+}
+
+$prev_member_pager = $now_member_pager === 1 ? null : max($now_member_pager - 1, 1); 
+$next_member_pager = $now_member_pager === $member_pager_ttl || $member_pager_ttl == 1 ? null : min($now_member_pager + 1, $ttl_member); 
+
+//-----------------------------
+
+$sql .= " LIMIT 10 OFFSET :offset";
+
+$offset = ($now_member_pager - 1) * 10;
+
+
+$members = $memberLogic->searchMember($sql, $_POST, $offset);
 
 ?>
 
@@ -222,5 +243,26 @@ $members = $memberLogic->searchMember($sql, $_POST);
             </tr>
         <?php endforeach;?>
     </table>
+
+    <!-- ページャー -->
+
+    <section class="member-pager">
+
+        <!-- ＜前へ＞の部分 -->
+        <form action="">
+            <?php if (is_null($prev_member_pager)): ?>
+                <span></span>
+            <?php else: ?>
+                <a href=""></a>
+            <?php endif;?>
+            <input type="hidden" name="">
+        </form>
+
+        <form action="">
+            <?php ?>
+        </form>
+
+        <!-- ＜後へ＞の部分 -->
+    </section>
 </body>
 </html>

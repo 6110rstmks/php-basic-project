@@ -90,6 +90,7 @@ $comment_ttl = $commentLogic->getCommentCountLinkedWithThread($thread_num);
 
 /**
  * コメントのページャーの数を算出
+ * 下の□１とか□2とかのやつ
  * @var int
  */
 $comment_pager_ttl = ($comment_ttl % 5) + 1;
@@ -233,7 +234,10 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
                              * trueもしくはfalseが帰ってくる
                              * @var 
                              */
-                            $like_check_flg = $likeLogic->checkLikeRecord($member_id, $comment['id']);
+                            if (isset($member_id))
+                            {
+                                $like_check_flg = $likeLogic->checkLikeRecord($member_id, $comment['id']);
+                            }
 
                         ?>
                         <!-- ハート -->
@@ -275,11 +279,13 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
 
     <!-- コメントのページャー -->
     <div style="height: 20px; width: auto; background-color: #BEBEBE;">
-        <!-- ＜前へ＞ -->
+        <!-- ＜前へ＞の部分 -->
         <form action="" style="display: inline;" class="comment-pager-form1" method="POST">
+                                        
             <?php if (is_null($prev_comment_pager)): ?>
                 <span style="font-size: 13.8px">前へ</span>
             <?php else:?>
+                <!-- クリックできる -->
                 <a class="prev-button" style="cursor: pointer">前へ</a>
             <?php endif;?>
 
@@ -287,7 +293,7 @@ $thread_detail_time = $month . '/' . $day . '/' . $year . ' ' . $hour . ':' . $m
         </form>
 
         <!-- ＜後へ＞ -->
-        <form action="" style="display: inline; margin-left: 50px;" class="comment-pager-form2" method="POST">
+        <form style="display: inline; margin-left: 50px;" class="comment-pager-form2" method="POST">
             <!-- 次のコメントのページャーがあるかどうか -->
             <?php if (is_null($next_comment_pager)): ?>
                 <span style="font-size: 12px">次へ</span>

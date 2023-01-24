@@ -18,7 +18,9 @@ if (isset($_SESSION['err']))
 {
     $session_msgs = $_SESSION['err'];
 }
-$_SESSION = array();
+
+// $_SESSION = array();
+unset($_SESSION['err']);
 ?>
 
 <form action="<?= memberRegisterConfirmPage ?>" method="POST">
@@ -130,5 +132,5 @@ $_SESSION = array();
         <?php endif; ?>
 
         <button>確認画面へ</button>
-        <button><a href="../<?= topPage ?>">トップに戻る</a></button>
+        <button><a href="<?= adminTopPage ?>">トップに戻る</a></button>
 </form>

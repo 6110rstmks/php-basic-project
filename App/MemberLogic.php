@@ -157,7 +157,7 @@ class MemberLogic {
     }
 
     /**
-     * member_list.phpで使用
+     * member_list.phpで使用→今は使ってない
      */
     public function getAllMembers()
     {
@@ -168,6 +168,10 @@ class MemberLogic {
         return $members;
     }
 
+    /**
+     * 
+     * 
+     */
     public function softDelete($member_id)
     {
         $sql = "UPDATE members SET deleted_at = now() WHERE id = :member_id";
@@ -180,14 +184,15 @@ class MemberLogic {
     }
 
     /**
+     * 
      * member_list.phpで使用
-     * @param string $sql, array $_post
+     * @return int 
      */
-    public function searchMember($sql, $_post)
+    public function CountSearchMember($sql, $_post)
     {
-
         $stmt = $this->pdo->prepare($sql);
 
+        // 検索フォームでidを指定した場合
         if (!empty($_post['id']))
         {
             $stmt->bindValue(':id', $_post['id']);
@@ -209,10 +214,49 @@ class MemberLogic {
 
         $stmt->execute();
 
+        $cnt = $stmt->fetchColumn();
+
+        return $cnt;
+    }
+
+    /**
+     * member_list.phpで使用
+     * @param string $sql, array $_post
+     */
+    public function searchMember($sql, $_post, $offset)
+    {
+
+        $stmt = $this->pdo->prepare($sql);
+
+        // 検索フォームでidを指定した場合
+        if (!empty($_post['id']))
+        {
+            $stmt->bindValue(':id', $_post['id']);
+        }
+
+        if (!empty($_post['prefecture']))
+        {
+            $stmt->bindValue(':pref_name', $_post['prefecture']);
+        }
+
+        if (!empty($_post['free_word']))
+        {
+            $pattern = '%' . $_post['free_word'] . '%'; 
+
+            $stmt->bindValue(':free_word1', $pattern);
+            $stmt->bindValue(':free_word2', $pattern);
+            $stmt->bindValue(':free_word3', $pattern);
+        }
+
+        $stmt->bindValue(':offset', $offset);
+
+        $stmt->execute();
+
         $members = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $members;
     }
+
 
     public function searchMemberById($id)
     {
@@ -226,10 +270,17 @@ class MemberLogic {
     }
 
     /**
-     * 
+     * メンバの総数を取得
      */
-    public function logout()
+    public function CountMembers()
     {
-        $_SESSION = array();
+        $sql = 'SELECT count(*) FROM members WHERE thread_id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $thread_id);
+        $stmt->execute();
+
+        $cnt = $stmt->fetchColumn();
+
+        return $cnt;
     }
 }
