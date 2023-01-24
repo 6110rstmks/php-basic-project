@@ -10,11 +10,6 @@ $memberLogic = new MemberLogic($pdo);
 
 $sql = 'SELECT * FROM members WHERE true';
 
-if (isset($_POST['asc_flg']))
-{
-    $asc_flg = true;
-    $sql .= "ORDER BY id ASC";
-}
 
 // 検索idの指定がある場合
 if (isset($_POST['id']))
@@ -23,9 +18,21 @@ if (isset($_POST['id']))
     $sql .= "AND id = :id";
 }
 
-// 検索フォームにて性別の指定がある場合
-if (isset($_POST['sex']))
+// 検索フォームにて男性のみの指定がある場合
+if (isset($_POST['male']) || !isset($_POST['female']))
 {
+    $sql .= "AND gender = 0";
+    
+} elseif (!isset($_POST['male']) || isset($_POST['female']))
+{
+    // 女性のみの指定がある場合
+    $sql .= "AND gender = 1";
+
+
+} elseif (isset($_POST['male']) || isset($_POST['female']))
+{
+    // 男性、女性、両方の指定がある場合
+    $sql .= "AND (gender = 1 OR gender = 0)";
 
 }
 
@@ -52,7 +59,12 @@ if (isset($_POST['free_word']))
 
 }
 
-
+if (isset($_POST['asc_flg']))
+// 昇順ボタンを押した場合
+{
+    $asc_flg = true;
+    $sql .= "ORDER BY id ASC";
+}
 
 
 ?>
@@ -90,9 +102,9 @@ if (isset($_POST['free_word']))
             <tr>
                 <td>性別</td>
                 <td>
-                    <input type="checkbox" name="sex" value="0" <?php if (isset($sex) && $sex == "0") { echo "checked";} ?>>
+                    <input type="checkbox" name="male" value="0" <?php if (isset($sex) && $sex == "0") { echo "checked";} ?>>
                     <label for="">男性</label>
-                    <input type="checkbox" name="sex" value="1" <?php if (isset($sex) && $sex == "1") { echo 'checked';} ?>>
+                    <input type="checkbox" name="female" value="1" <?php if (isset($sex) && $sex == "1") { echo 'checked';} ?>>
                     <label for="">女性</label>
                 </td>
             </tr>
