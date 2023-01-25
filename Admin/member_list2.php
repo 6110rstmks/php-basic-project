@@ -10,132 +10,61 @@ use App\MemberLogic;
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo);
 
-$sql = 'SELECT * FROM members WHERE true';
 
-// 検索idの指定がある場合
-if (!empty($_POST['id']))
+$sql = 'SELECT * FROM members WHERE true ORDER BY id DESC';
+
+
+// member_search.phpからのsql文を取得
+if (isset($_SESSION['from_search_sql']))
 {
-    $sql .= " AND id = :id";
-}
+    $sql = $_SESSION['from_search_sql'];
 
-// 検索フォームにて男性のみの指定がある場合
-if (isset($_POST['male']) && !isset($_POST['female']))
-{
-    $sql .= " AND gender = 0";
-    
-} elseif (!isset($_POST['male']) && isset($_POST['female']))
-{
-    // 女性のみの指定がある場合
-    $sql .= " AND gender = 1";
-
-
-} elseif (isset($_POST['male']) && isset($_POST['female']))
-{
-    // 男性、女性、両方の指定がある場合
-    $sql .= " AND (gender = 1 OR gender = 0)";
-
-}
-
-if (!empty($_POST['prefecture']))
-{
-    $sql .= " AND pref_name = :pref_name";
-}
-
-
-// 検索フォームにてフリーワードの指定がある場合
-if (!empty($_POST['free_word']))
-{
-    $sql .= " AND (name_sei Like :free_word1 OR name_mei Like :free_word2 OR email LIKE :free_word3)";
-}
-
-
-//-----------------------------------
-// 昇順　降順toggle
-
-// 昇順降順のtoggleボタンを押した場合
-if (isset($_POST['order_toggle']))
-{
-
-    // このif文より上の行で作成した$sqlを破棄して$_POSTの値を使用
-    $sql = $_SESSION['sql'];
-
-    // ASCの文字列をsql文の中に持つ場合（ボタンを押す前の順番が昇順の場合）
-    // if (strpos($_SESSION['sql'], "ASC") !== false)
-    if (strpos($sql, "ASC") !== false)
-    {
-        // sql文からASCを削除してDESCに変更
-        $sql = str_replace('ASC', 'DESC', $sql);
-    } elseif (strpos($sql, "DESC") !== false)
-    {
-        $sql = str_replace('DESC', 'ASC', $sql);   
-    }
 } else {
-    $sql .= " ORDER BY id DESC";
+    
 }
-
-
-
-//----------pagerのための処理
 
 // メンバ数を取得。
 // ただし検索フォームに値が
 
-// if (count($_POST) === 0 && isset($_GET['pager']))
-// {
-//     $ttl_member = $_SESSION['temporary_ttl_member'];
-
-// } else {
-//     $ttl_member = $memberLogic->CountSearchMember($sql, $_POST);
-//     $_SESSION['temporary_ttl_member'] = $ttl_member;
-// }
-
 $ttl_member = $memberLogic->CountSearchMember($sql, $_POST);
-
-// 
-if (count($_POST) > 0)
-{
-    $_SESSION['ttl_member'] = $ttl_member;
-}
 
 
 //　メンバのページャーの数を取得
 
 $member_pager_ttl = (int) ceil(($ttl_member) / 10);
 
-if (isset($_GET['pager']) )
+// ページャーをつかってこのページにきたとき。
+// （member_search.phpからきたとき）
+if (isset($_SESSION['now_member_pager']))
 {
-    // ページャーで移動した場合はCountSearchMemberメソッドではなく、ttl_memberはセッションから取得する
-    $ttl_member = $_SESSION['ttl_member'];
-    $member_pager_ttl = (int) ceil(($ttl_member) / 10);
+    $now_member_pager = (int) $_SESSION['now_member_pager'];
 
-
-    $now_member_pager = (int) $_GET['pager'];
+    // now_member_pagerをうけとったので中身を削除
+    unset($_SESSION['now_member_pager']);
 
     // 検索フォームから検索した場合に前回のsqlを使用する。
-    $sql = $_SESSION['sql'];
+    $sql = $_SESSION['temp_sql'];
     // 上記のとき（検索フォームから検索した場合）
 
 } else {
     $now_member_pager = 1;
 }
 
+// 前ページがあるかどうか
 $prev_member_pager = $now_member_pager === 1 ? null : max($now_member_pager - 1, 1); 
 $next_member_pager = $now_member_pager === $member_pager_ttl || $member_pager_ttl == 1 ? null : min($now_member_pager + 1, $ttl_member); 
 
 //---------------------------------------------------------------------
 
-// ある条件の検索のために作成したsqlに対して昇順、降順のtoggleするために使用。
-// またある条件の検索して取得した検索結果の行のページャーを移動した場合のsql文を取得するために使用
-// sessionに保存
-// $_SESSION['sql']一つ前の$sqlの内容を保存するための、退避用変数として利用する。
-$_SESSION['sql'] = $sql;
+// 今回の条件の検索（またはデフォルトの結果の表示）のために作成したsqlに対して昇順、降順のtoggleをするために今回使用したsql文を保存する。
+// また今回の条件の検索して取得した検索結果の行のページャーを移動した場合のsql文を取得するために使用
+$_SESSION['temp_sql'] = $sql;
 
 //-----------------------------
 
 $sql .= " LIMIT 10 OFFSET :offset";
 
 $offset = ($now_member_pager - 1) * 10;
-
 
 $members = $memberLogic->searchMember($sql, $_POST, $offset);
 
@@ -166,8 +95,7 @@ $members = $memberLogic->searchMember($sql, $_POST, $offset);
         <a href="<?= memberRegisterFormPage ?>">会員登録</a>
 
     </button>
-    <!-- <form method="POST" action="member_list.php?pager=1"> -->
-    <form method="POST" action="">
+    <form method="POST" action="member_list2.php">
         <table>
 
             <tr>
@@ -299,7 +227,8 @@ $members = $memberLogic->searchMember($sql, $_POST, $offset);
 
         <!-- 現在の２つ前のページ -->
         <?php if ($now_member_pager ===  $member_pager_ttl && $member_pager_ttl >= 3): ?>
-            <form action="">
+            <!-- <form action="" method="GET"> -->
+            <form action="member_search.php" method="POST">
                 <button class="member-pager" style="border: 1px black solid"><?= $now_member_pager - 2 ?></button>
                 <input type="hidden" name="pager" value="<?= $now_member_pager - 2?>">
             </form>
@@ -307,7 +236,7 @@ $members = $memberLogic->searchMember($sql, $_POST, $offset);
 
         <!-- 現在の一つ前のページ -->
         <?php if (isset($prev_member_pager)): ?>
-            <form action="">
+            <form action="member_search.php" method="POST">
                 <button style="border: 1px black solid"><?= $prev_member_pager ?></button>
                 <input type="hidden" name="pager" value="<?= $prev_member_pager ?>">
             </form>
@@ -318,7 +247,7 @@ $members = $memberLogic->searchMember($sql, $_POST, $offset);
 
         <!-- 現在の一つ次のページ -->
         <?php if (isset($next_member_pager)): ?>
-            <form action="">
+            <form action="member_search.php" method="POST">
                 <button class="member-pager" style="border: 1px black solid"><?= $next_member_pager ?></button>
                 <input type="hidden" name="pager" value="<?= $next_member_pager ?>">
             </form>
@@ -326,7 +255,7 @@ $members = $memberLogic->searchMember($sql, $_POST, $offset);
 
         <!-- 現在の２つ次のページ -->
         <?php if ($now_member_pager === 1 && $member_pager_ttl >= $now_member_pager + 2): ?>
-            <form action="">
+            <form action="member_search.php" method="POST">
                 <button class="member-pager" style="border: 1px black solid"><?= $now_member_pager + 2 ?></button>
                 <input type="hidden" name="pager" value="<?= $now_member_pager + 2?>">
             </form>
@@ -334,7 +263,7 @@ $members = $memberLogic->searchMember($sql, $_POST, $offset);
 
         <!-- ＜後へ＞の部分 -->
         <?php if (isset($next_member_pager)): ?>
-            <form action="" method="GET">
+            <form action="member_search.php" method="POST">
                 <button>次へ></button>
                 <input type="hidden" name="pager" value="<?= $next_member_pager?>">
             </form>
