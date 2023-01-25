@@ -65,7 +65,7 @@ $member_pager_ttl = (int) ceil(($ttl_member) / 10);
 
 // 前ページがあるかどうか
 $prev_member_pager = $now_member_pager === 1 ? null : max($now_member_pager - 1, 1); 
-$next_member_pager = $now_member_pager === $member_pager_ttl || $member_pager_ttl == 1 ? null : min($now_member_pager + 1, $ttl_member); 
+$next_member_pager = $now_member_pager === $member_pager_ttl || $member_pager_ttl == 1 || $member_pager_ttl == 0 ? null : min($now_member_pager + 1, $ttl_member); 
 
 //---------------------------------------------------------------------
 
