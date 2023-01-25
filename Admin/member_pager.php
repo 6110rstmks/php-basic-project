@@ -1,6 +1,11 @@
 <?php
 
+
+
 session_start();
+
+require_once(__DIR__ . '/../config.php');
+
 
 // 現在のページ番号を取得
 
@@ -29,6 +34,6 @@ if (isset($_POST['pager']))
 $_SESSION['now_member_pager'] = $now_member_pager;
 
 //　メンバの数をセッションに格納してmember_list.phpへ渡す
-header('Location:member_list2.php');
+header('Location:' . memberList);
 
 ?>

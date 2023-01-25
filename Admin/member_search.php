@@ -2,6 +2,9 @@
 
 session_start();
 
+require_once(__DIR__ . '/../config.php');
+
+
 $sql = 'SELECT * FROM members WHERE true';
 
 // 検索idの指定がある場合
@@ -74,4 +77,4 @@ if (!isset($_POST['order_toggle']))
 
 // メンバ数の取得はmember_list2.phpで行う
 
-header('Location:./member_list2.php');
+header('Location:' . memberList);
