@@ -66,6 +66,12 @@ if (isset($_POST['order_toggle']))
 
 $_SESSION['from_search_sql'] = $sql;
 
+if (!isset($_POST['order_toggle']))
+{
+
+    $_SESSION['search_post'] = $_POST;
+}
+
 // メンバ数の取得はmember_list2.phpで行う
 
 header('Location:./member_list2.php');

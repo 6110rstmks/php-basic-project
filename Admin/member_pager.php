@@ -20,10 +20,10 @@ if (isset($_POST['pager']))
 
 
 // 検索フォームから検索した結果をページャーで遷移する場合、前回行ったsql文を取得
-if (isset($_SESSION['temp_sql']))
-{
-    $sql = $_SESSION['temp_sql'];
-}
+// if (isset($_SESSION['temp_sql']))
+// {
+//     $sql = $_SESSION['temp_sql'];
+// }
 
 // member_list2.phpにわたすための現在のページ番号をセッションに保存
 $_SESSION['now_member_pager'] = $now_member_pager;
