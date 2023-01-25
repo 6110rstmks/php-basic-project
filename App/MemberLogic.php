@@ -24,20 +24,40 @@ class MemberLogic {
 
         $stmt->execute();
 
-        $member = $stmt->fetchObject();
+        // $member = $stmt->fetchObject();
+        $member = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         return $member;
     }
 
     /**
      * 
-     * register_confirm_blade.phpにて使用
+     * member_confirm_blade.phpにて使用
      * @param string $email
      * @return bool
      * 
      */
 
     public function checkEmailExist($data)
+    {
+        $sql = 'SELECT * FROM members WHERE email = :data';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        // $stmt->execute();
+        $stmt->execute(array(
+            ':data' => $data,
+        ));
+
+        $member = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $member;
+    }
+
+    /**
+     * member_confirm_blade.phpで使用
+     */
+    public function checkEmailExistEditVer($data)
     {
         $sql = 'SELECT * FROM members WHERE email = :data';
 

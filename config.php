@@ -112,6 +112,12 @@ define("memberList", 'member_list.php');
 
 define("withdrawalConfirmPage", "withdrawal_confirm_blade.php");
 
-define("memberEditPage" ,"member_edit_blade.php")
+define("memberEditPage" ,"member_edit_blade.php");
+
+define("memberTemplate", "member_template.php");
+
+define("memberConfirmPage" ,"member_confirm_blade.php");
+
+define("memberCompletePage", "member_complete_page");
 
 ?>

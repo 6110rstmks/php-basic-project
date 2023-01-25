@@ -15,6 +15,20 @@ Token::validate();
 // ワンタイムトークンのため中身を削除
 $_SESSION['csrf_token'] = '';
 
+$file = $_SESSION['file'];
+
+$id = $_POST['id'];
+
+if ($file == 'regist')
+{
+    $title = '会員登録';
+    $complete = '登録完了';
+    $id = "登録後に自動採番";
+} else {
+    $title = '会員編集';
+    $complete = '編集完了';
+}
+
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo); 
 
@@ -152,12 +166,12 @@ if (mb_strlen($other_address) >= 101)
 // 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
 // if (!isset($password))
-if (empty($password))
+if ($file == 'regist' && empty($password))
 {
     $err['password_required'] = 'パスワードは必須入力です。';
 }
 // 8～20文字の文字入力数でない場合に「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
-elseif (strlen($password) < 8 || strlen($password) > 20)
+elseif (!empty($password) && (strlen($password) < 8 || strlen($password) > 20))
 {
     $err['password_string_limit'] = 'パスワードの文字数は8文字以上20文字以下でお願いします。';
 }
@@ -169,7 +183,7 @@ if (mb_strlen($password) != mb_strwidth($password))
     $err['password_hankaku'] = 'パスワードは半角英数字でお願いします';
 }
 
-if (!preg_match('/[A-Za-z0-9]{8,21}/', $password))
+if (!empty($password) && !preg_match('/[A-Za-z0-9]{8,21}/', $password))
 {
     $err['password_kigoumozi'] = 'パスワードに記号文字は使用できません';
 }
@@ -186,14 +200,14 @@ if (mb_strlen($password_cnf) != mb_strwidth($password_cnf))
 
 // 空白で「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-if (empty($password_cnf))
+if ($file == 'regist' && empty($password_cnf))
 {
     $err['password_cnf_required'] = 'パスワード確認の項目は必須入力です。';
 }
 
 // 8～20文字の文字入力数でない場合に「確認画面へ」のボタンで遷移すると登録フォームに戻りエラーが表示されるか
 
-elseif (strlen($password_cnf) < 8 || strlen($password_cnf) > 20)
+elseif (!empty($password_cnf) &&(strlen($password_cnf) < 8 || strlen($password_cnf) > 20))
 {
     $err['password_cnf_string_limit'] = 'パスワード確認の文字数は8文字以上20文字以下でお願いします。';
 }
@@ -207,7 +221,7 @@ if ($password != $password_cnf)
 
 // 記号の半角文字が入力された場合
 
-if (!preg_match('/[A-Za-z0-9]{8,21}/', $password_cnf))
+if (!empty($password) && !preg_match('/[A-Za-z0-9]{8,21}/', $password_cnf))
 {
     $err['password_cnf_kigoumozi'] = 'パスワード確認に記号文字は使用できません';
 }
@@ -233,9 +247,21 @@ if (strlen($email) >= 201)
  */
 $hasEmail = $memberLogic->checkEmailExist($email);
 
-if ($hasEmail != false)
+$now_id_email = $memberLogic->getMemberById($id)['email'];
+
+if ($file == "regist")
 {
-    $err['email_duplicate'] = '入力されたemailは既に使用されています';
+    if ($hasEmail != false)
+    {
+        $err['email_duplicate'] = '入力されたemailは既に使用されています';
+    }
+}
+elseif ($file == "edit")
+{
+    if ($hasEmail != false && $email != $now_id_email)
+    {
+        $err['email_duplicate'] = '入力されたemailは既に使用されています';
+    }
 }
 
 // --------------------------------
@@ -244,7 +270,12 @@ if ($hasEmail != false)
 if (count($err) > 0)
 {
     $_SESSION['err'] = $err;
-    header('Location: '. memberRegisterFormPage);
+    if ($title == 'regist')
+    {
+        header('Location: '. memberRegisterFormPage);
+    } else {
+        header('Location:' . memberEditPage . '?id=' . $id);
+    }
     exit();
 }
 
@@ -260,7 +291,7 @@ if (count($err) > 0)
 </head>
 <body>
     <section style="display: flex; justify-content: space-between;">
-        <h2>会員登録</h2>
+        <h2><?= $title ?></h2>
         <button type="button" onclick="history.back()">戻る</button>
     </section>
     <div>
@@ -284,20 +315,22 @@ if (count($err) > 0)
     <div>メールアドレス</div>
     <div><?= $email ?></div>
 
-    <form action="<?= memberRegisterCompletePage ?>" method="POST">
+    <form action="<?= memberCompletePage ?>" method="POST">
 
         <input type="hidden" name="last_name" value="<?= $last_name ?>">
         <input type="hidden" name="first_name" value="<?= $first_name ?>">
         <input type="hidden" name="sex" value="<?= $sex ?>">
         <input type="hidden" name="prefecture" value="<?= $prefecture ?>">
         <input type="hidden" name="other_address" value="<?= $other_address ?>">
-        <input type="hidden" name="password" value="<?= $password ?>">
+        <?php if (!empty($password)): ?>
+            <input type="hidden" name="password" value="<?= $password ?>">
+        <?php endif;?>
         <input type="hidden" name="email" value="<?= $email ?>">
 
         <!--  二重送信対策-->
         <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
 
-        <button>登録完了</button>
+        <button><?= $complete ?></button>
     </form>
 </body>
 </html>

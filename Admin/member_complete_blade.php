@@ -14,7 +14,15 @@ Token::validate();
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo); 
 
-$memberLogic->createMember($_POST);
+$file = $_SESSION['file'];
+
+if ($file == "regist")
+{
+    $memberLogic->createMember($_POST);
+} elseif ($file == "edit")
+{
+    $memberLogic->updateMember($_POST);
+}
 
 unset($_SESSION['last_name']);
 unset($_SESSION['first_name']);
@@ -22,6 +30,7 @@ unset($_SESSION['sex']);
 unset($_SESSION['prefecture']);
 unset($_SESSION['other_address']);
 unset($_SESSION['email']);
+unset($_SESSION['file']);
 
 header('Location:' . memberList);
 
