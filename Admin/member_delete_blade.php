@@ -11,6 +11,6 @@ $memberLogic = new MemberLogic($pdo);
 
 $memberLogic->softDelete($member_id);
 
-header('Location:' . adminTopPage);
+header('Location:' . memberList);
 
 ?>
