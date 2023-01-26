@@ -250,7 +250,11 @@ if ($file == 'regist')
                     </select>
                 <?php endif;?>
             <label for="">それ以降の住所</label>
-            <input type="text" name="other_address" id="" value="<?php if(isset($other_address) ){ echo $other_address; } ?>">
+            <?php if ($file == 'regist'): ?>
+                <input type="text" name="other_address" id="" value="<?php if($err_redirect_flg) { echo $other_address; } ?>">
+            <?php else: ?>
+                <input type="text" name="other_address" id="" value="<?php if($err_redirect_flg) { echo $other_address; } else { echo $initial_address; }?>">
+            <?php endif;?>
         </p>
 
         <p>
