@@ -12,8 +12,9 @@ use App\MemberLogic;
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo);
 
-
-$sql = 'SELECT * FROM members WHERE true ORDER BY id DESC';
+// デフォルトsql
+// $sql = 'SELECT * FROM members WHERE true ORDER BY id DESC';
+$sql = 'SELECT * FROM members WHERE deleted_at IS NULL ORDER BY id DESC';
 
 
 // member_search.phpからのsql文を取得
@@ -221,7 +222,7 @@ $members = $memberLogic->searchMember($sql, $post, $offset);
                 <td><?= $member['pref_name'] . $member['address']?></td>
                 <td><?= $member['created_at'] ?></td>
                 <td><a href="<?= memberEditPage . '?id=' . $member['id'] ?>">編集</a></td>
-                <td>詳細</td>
+                <td><a href="<?= memberDetailPage . '?id=' . $member['id'] ?>">詳細</a></td>
             </tr>
         <?php endforeach;?>
     </table>

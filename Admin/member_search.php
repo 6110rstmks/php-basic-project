@@ -5,7 +5,7 @@ session_start();
 require_once(__DIR__ . '/../config.php');
 
 
-$sql = 'SELECT * FROM members WHERE true';
+$sql = 'SELECT * FROM members WHERE deleted_at IS NULL';
 
 // 検索idの指定がある場合
 if (!empty($_POST['id']))
