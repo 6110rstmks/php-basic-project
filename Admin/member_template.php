@@ -57,7 +57,11 @@ if ($file == 'regist')
 
 
 ?>
-<div><?= $title ?></div>
+<div style="display: flex;">
+
+    <div><?= $title ?></div>
+    <button style="margin-left: 240px"><a href="<?= memberList ?>">一覧へ戻る</a></button>
+</div>
 
 <form action="<?= memberConfirmPage ?>" method="POST">
         <p>
