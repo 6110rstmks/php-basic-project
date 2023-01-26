@@ -340,6 +340,9 @@ if (count($err) > 0)
         <!--  二重送信対策-->
         <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
 
+        <button type="button" onclick="history.back()">前に戻る</button>
+        
+
         <button><?= $complete ?></button>
     </form>
 </body>
