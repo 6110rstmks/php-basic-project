@@ -12,7 +12,7 @@ class MemberLogic {
     }
 
     /**
-     * thread_detail.phpで使用
+     * thread_detail.php, member_confirm_blade.phpで使用
      */
     public function getMemberById($id)
     {
@@ -95,21 +95,40 @@ class MemberLogic {
         $stmt = $this->pdo->prepare($sql);
 
         $stmt->execute($arr);
+    }
 
-        // session_regenerate_id(true);
+    /**
+     * 
+     * member_complete_blade.phpで使用
+     * @param array $memberData
+     * @return 
+     */
+    public function updateMember($memberData)
+    {
+        $id = intval($memberData['id']);
 
-        // $stmt = connect()->prepare("SELECT id FROM Members WHERE name = :name");
+        if (!isset($memberData['password']))
+        {
+            $sql = 'UPDATE members SET name_sei = :name_sei, name_mei = :name_mei, gender = :gender, pref_name = :pref_name, address = :address, email = :email, updated_at = now() WHERE id = :id';
+        } else {
+            $sql = 'UPDATE members SET name_sei = :name_sei, name_mei = :name_mei, gender = :gender, pref_name = :pref_name, address = :address, password = :password, email = :email, updated_at = now() WHERE id = :id';
+        }
 
-        // $stmt->bindValue('name', $MemberData['name'], \PDO::PARAM_INT);
+        $stmt = $this->pdo->prepare($sql);
 
-        // $stmt->execute();
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':name_sei', $memberData['last_name']);
+        $stmt->bindValue(':name_mei', $memberData['first_name']);
+        $stmt->bindValue(':gender', $memberData['sex']);
+        $stmt->bindValue(':pref_name', $memberData['prefecture']);
+        $stmt->bindValue(':address', $memberData['other_address']);
+        $stmt->bindValue(':email', $memberData['email']);
+        if (isset($memberData['password']))
+        {
+            $stmt->bindValue(':password', $memberData['password']);
+        }
 
-        // $id = $stmt->fetch(PDO::FETCH_COLUMN);
-
-        // $_SESSION['login_Member'] = ['id' => $id, 'name' => $MemberData['name']];
-
-        // return $result;
-
+        $stmt->execute();
     }
 
     /**

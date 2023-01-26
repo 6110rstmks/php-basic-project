@@ -118,6 +118,6 @@ define("memberTemplate", "member_template.php");
 
 define("memberConfirmPage" ,"member_confirm_blade.php");
 
-define("memberCompletePage", "member_complete_page");
+define("memberCompletePage", "member_complete_blade.php");
 
 ?>

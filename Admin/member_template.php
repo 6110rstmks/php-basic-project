@@ -7,6 +7,7 @@ require_once("../function.php");
 
 // in development
 if ($_SERVER['SERVER_NAME'] === 'localhost') {
+    
     if ($_SERVER['REQUEST_URI'] == '/php-kisokadai/admin/member_regist_blade.php') {
         $file = 'regist';
     } else {

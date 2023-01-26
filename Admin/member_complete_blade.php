@@ -9,12 +9,13 @@ use App\MemberLogic;
 use App\Database;
 use App\Token;
 
-Token::validate();
+// Token::validate();
 
 $pdo = Database::getInstance();
 $memberLogic = new MemberLogic($pdo); 
 
 $file = $_SESSION['file'];
+unset($_SESSION['file']);
 
 if ($file == "regist")
 {
@@ -24,6 +25,7 @@ if ($file == "regist")
     $memberLogic->updateMember($_POST);
 }
 
+unset($_SESSION['temp_sql']);
 unset($_SESSION['last_name']);
 unset($_SESSION['first_name']);
 unset($_SESSION['sex']);

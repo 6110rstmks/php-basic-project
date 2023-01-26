@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+
 require_once("../config.php");
 
 
@@ -247,7 +248,10 @@ if (strlen($email) >= 201)
  */
 $hasEmail = $memberLogic->checkEmailExist($email);
 
-$now_id_email = $memberLogic->getMemberById($id)['email'];
+if ($file == "edit")
+{
+    $now_id_email = $memberLogic->getMemberById($id)['email'];
+}
 
 if ($file == "regist")
 {
@@ -270,7 +274,7 @@ elseif ($file == "edit")
 if (count($err) > 0)
 {
     $_SESSION['err'] = $err;
-    if ($title == 'regist')
+    if ($file == 'regist')
     {
         header('Location: '. memberRegisterFormPage);
     } else {
@@ -322,10 +326,16 @@ if (count($err) > 0)
         <input type="hidden" name="sex" value="<?= $sex ?>">
         <input type="hidden" name="prefecture" value="<?= $prefecture ?>">
         <input type="hidden" name="other_address" value="<?= $other_address ?>">
+
         <?php if (!empty($password)): ?>
             <input type="hidden" name="password" value="<?= $password ?>">
         <?php endif;?>
         <input type="hidden" name="email" value="<?= $email ?>">
+
+        <?php if ($file == 'edit'): ?>
+            <input type="hidden" name="id" value="<?= $id ?>">
+        <?php endif; ?>
+
 
         <!--  二重送信対策-->
         <input type="hidden" name="csrf_token" value="<?= Token::create(); ?>">
