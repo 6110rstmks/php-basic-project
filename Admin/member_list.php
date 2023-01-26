@@ -211,7 +211,7 @@ $members = $memberLogic->searchMember($sql, $post, $offset);
         <?php foreach($members as $member): ?>
             <tr>
                 <td><?= $member['id'] ?></td>
-                <td><?= $member['name_sei'] . $member['name_mei'] ?></td>
+                <td><a href="<?= memberDetailPage . '?id=' . $member['id'] ?>"><?= $member['name_sei'] . $member['name_mei'] ?></a></td>
                 <td>
                     <?php if ($member['gender'] === 0): ?>
                         男性
